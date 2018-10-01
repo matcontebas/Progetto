@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/08043160/Documents/EsempiJava/RicercaFileLib/RicercaFile.jar"/>
+	<classpathentry kind="lib" path="C:/Users/08043160/Documents/EsempiJava/UCanAccess-4.0.3-bin/ucanaccess-4.0.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/08043160/Documents/EsempiJava/UCanAccess-4.0.3-bin/lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/08043160/Documents/EsempiJava/UCanAccess-4.0.3-bin/lib/commons-logging-1.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/08043160/Documents/EsempiJava/UCanAccess-4.0.3-bin/lib/hsqldb.jar"/>
+	<classpathentry kind="lib" path="C:/Users/08043160/Documents/EsempiJava/UCanAccess-4.0.3-bin/lib/jackcess-2.1.9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/08043160/Documents/EsempiJava/LibreriaJavax_Mail/javax.mail.jar"/>
+	<classpathentry kind="lib" path="C:/Users/08043160/Documents/EsempiJava/jaf-1.1.1/activation.jar"/>
+	<classpathentry kind="lib" path="C:/Users/08043160/Documents/EsempiJava/PostaLib/PostaLib.jar"/>
+	<classpathentry kind="lib" path="C:/Users/08043160/Documents/EsempiJava/DatabaseLib/DatabaseLib.jar"/>
+	<classpathentry kind="lib" path="C:/Users/08043160/Documents/EsempiJava/ConversioneDateLib/ConversioneDate.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
