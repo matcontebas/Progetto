@@ -23,6 +23,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 * 0: tutto regolare;
 	 * 1: errore nella connessione al driver
 	 * 2: errore nella connessione con il database
+	 * 3: errore invio posta
 	 */
 	private int errore;
 	private Connection connessioneDB=null;
@@ -105,7 +106,6 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 					if (controllodati) {
 						contamaildainviare++;
 						//Costruire la mail
-						//-----------------DESTINATARIO FITTIZIO-----------------------
 						destinatariotxt.setText("antonio.argenziano@telecomitalia.it, massimo.dominici@telecomitalia.it, andrea.turella@telecomitalia.it");
 						destinatarioCCtxt.setText("fabrizio.adanti@telecomitalia.it, adriano.calvini@telecomitalia.it, paolo.bartolini@telecomitalia.it, mauro.dinicola@telecomitalia.it, "
 								+ "emanuela.chetta@telecomitalia.it, raffaele.guarracino@telecomitalia.it, tommaso.leonetti@telecomitalia.it, giorgio.mecocci@telecomitalia.it, "
@@ -140,8 +140,6 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 							//Serve per aggiungere eventuali altre AOL. L'evento non si verificherà mai
 							JOptionPane.showMessageDialog(null, "AOL non identificata: " + recordset.getString(AOL));
 						}
-						//------------------ DESTINATARIO FITTIZIO----------------------------
-						//destinatarioCCtxt.setText("matteo.bassi@telecomitalia.it");
 						//Fine destinatario per conoscenza
 						//Costruisco l'oggetto della mail------------------
 						oggettotxt.setText("Richiesta lavoro programmato "+ recordset.getString(SOLUZIONE)+ " Centrale "+ 
@@ -192,12 +190,13 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 									}
 
 								} else {
-									setErrore(0);
-									JOptionPane.showMessageDialog(null, "Errore la posta non è partita");
+									setErrore(3);
+									JOptionPane.showMessageDialog(null, "Errore 3 la posta non è partita");
 								}
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
-								JOptionPane.showMessageDialog(null, "Errore la posta non è partita (try/catch)");
+								setErrore(3);
+								JOptionPane.showMessageDialog(null, "Errore 3 la posta non è partita (try/catch)");
 								e.printStackTrace();
 							}
 							//Fine invio mail
@@ -359,12 +358,13 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 									}
 
 								} else {
-									setErrore(0);
-									JOptionPane.showMessageDialog(null, "Errore la posta non è partita");
+									setErrore(3);
+									JOptionPane.showMessageDialog(null, "Errore 3 la posta non è partita");
 								}
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
-								JOptionPane.showMessageDialog(null, "Errore la posta non è partita (try/catch)");
+								setErrore(3);
+								JOptionPane.showMessageDialog(null, "Errore 3 la posta non è partita (try/catch)");
 								e.printStackTrace();
 							}
 							//Fine invio mail
