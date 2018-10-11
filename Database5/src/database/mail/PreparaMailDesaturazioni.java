@@ -36,6 +36,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	final int WR = 28;//colonna 28 della tabella Desaturazioni
 	final int NLP=26; //colonna 26 del file desaturazioni
 	final int AOL=30; //colonna 30 del file desaturazioni
+	final int AZIONE=32; //colonna 32 della tabella desaturazioni
 	final int DATA_INVIO_MAIL=34; //colonna 34 del file desaturazioni
 	final String ABM="enzo.cialone@telecomitalia.it, gianluca.dicrescenzo@telecomitalia.it, angelomario.blasioli@telecomitalia.it, marco.vigilante@telecomitalia.it, domenico.montebello@telecomitalia.it, paolo.digirolamo@telecomitalia.it";
 	final String LAZ="giovanna.gerbasio@telecomitalia.it, mario.micci@telecomitalia.it";
@@ -65,7 +66,6 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			setErrore(0);//errore=0 significa tutto regolare
 		}
 		else {
-			//System.out.println("Driver di database non corretto");
 			JOptionPane.showMessageDialog(FinestraComando, "Driver di database non corretto");
 			setErrore(1); //errore=1 significa  nella connessione con il driver
 		}
@@ -75,7 +75,6 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		ResultSet recordset=null;
 
 		if (getErrore()==0) {
-			//inserire codice con sql
 			try {
 				int i=0;
 				int mailinviate=0;
@@ -89,11 +88,9 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				//serve a dichiarere se il recordset potrà essere scorso solamente in avanti e potrà essere aggiornabile
 				statement=connessioneDB.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 				// Step 2.C: Executing SQL &amp; retrieve data into recordSet
-				//recordset = statement.executeQuery("SELECT * FROM Desaturazioni WHERE [N# LP] = '1693/2018'");
 				recordset = statement.executeQuery("SELECT * FROM Desaturazioni_Locale WHERE DataInvioMail is Null AND TD is Not Null AND [N# LP] is Not Null AND WR is Not Null AND [Data programmata] is Not Null");
 				// Conteggio record
 				while (recordset.next()){
-					//System.out.println(recordset.getString(CENTRALE)+ " - "+ recordset.getInt(3)+ " - "+recordset.getString(AOL));
 					i+=1;
 					//Controllo se il campo AOL è scritto correttamente
 					String Temp=recordset.getString(AOL);
@@ -108,7 +105,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 						destinatariotxt.setText("antonio.argenziano@telecomitalia.it, massimo.dominici@telecomitalia.it, andrea.turella@telecomitalia.it");
 						destinatarioCCtxt.setText("fabrizio.adanti@telecomitalia.it, adriano.calvini@telecomitalia.it, paolo.bartolini@telecomitalia.it, mauro.dinicola@telecomitalia.it, "
 								+ "emanuela.chetta@telecomitalia.it, raffaele.guarracino@telecomitalia.it, tommaso.leonetti@telecomitalia.it, giorgio.mecocci@telecomitalia.it, "
-								+ "massimo.papini@telecomitalia.it, pasquale.mastrantoni@telecomitalia.it, alessio.vetrano@telecomitalia.it, "
+								+ "pasquale.mastrantoni@telecomitalia.it, alessio.vetrano@telecomitalia.it, "
 								+ "andrea.turella@telecomitalia.it,  maurizio.cabras@telecomitalia.it,  alessandro.calabretta@telecomitalia.it,  "
 								+ "laura.vignozzi@telecomitalia.it, giovannipietro.farris@telecomitalia.it, matteo.bassi@telecomitalia.it, claudia.vaccari@telecomitalia.it, "
 								+ "nicola.noferi@telecomitalia.it, sergio.nobili@telecomitalia.it, demetrio.festa@telecomitalia.it, beatrice.pedani@telecomitalia.it, gabriele.piccini@telecomitalia.it, davide.dambrosio@telecomitalia.it");
@@ -180,6 +177,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 										java.sql.Date sqlDate= java.sql.Date.valueOf(todayLocalDate);
 										//Fine gestione data
 										recordset.updateDate(DATA_INVIO_MAIL, sqlDate);
+										recordset.updateString(AZIONE, "verifica esecuzione");
 										recordset.updateRow();
 										JOptionPane.showMessageDialog(FinestraComando, "Data  aggiornata OK");
 									} catch (Exception e) {
@@ -311,6 +309,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 										java.sql.Date sqlDate= java.sql.Date.valueOf(todayLocalDate);
 										//Fine gestione data
 										recordset.updateDate(DATA_INVIO_MAIL, sqlDate);
+										recordset.updateString(AZIONE, "verifica esecuzione");
 										recordset.updateRow();
 										JOptionPane.showMessageDialog(FinestraComando, "Data  aggiornata OK");
 									} catch (Exception e) {
@@ -362,7 +361,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				}
 			}
 		} else {
-			JOptionPane.showMessageDialog(FinestraComando, "Errore: "+getErrore()+" il pulsante non funzione");
+			JOptionPane.showMessageDialog(FinestraComando, "Errore: "+getErrore()+" il pulsante non funziona");
 		}
 	}//Fine metodo Simula
 	public void CollegaFileAccess() {
