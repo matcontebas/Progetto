@@ -70,10 +70,10 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			setErrore(1); //errore=1 significa  nella connessione con il driver
 		}
 	}
-	public void EstraiDatidaFile() {
+	public void EstraiDatidaFile(boolean avvio_o_simulazione) {
 		Statement statement=null;
 		ResultSet recordset=null;
-
+		System.out.println(avvio_o_simulazione);
 		if (getErrore()==0) {
 			try {
 				int i=0;
@@ -101,40 +101,49 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 					//Fine controllo stringhe vuote
 					if (controllodati) {
 						contamaildainviare++;
-						//Costruire la mail
-						destinatariotxt.setText("antonio.argenziano@telecomitalia.it, massimo.dominici@telecomitalia.it, andrea.turella@telecomitalia.it");
-						destinatarioCCtxt.setText("fabrizio.adanti@telecomitalia.it, adriano.calvini@telecomitalia.it, paolo.bartolini@telecomitalia.it, mauro.dinicola@telecomitalia.it, "
-								+ "emanuela.chetta@telecomitalia.it, raffaele.guarracino@telecomitalia.it, tommaso.leonetti@telecomitalia.it, giorgio.mecocci@telecomitalia.it, "
-								+ "pasquale.mastrantoni@telecomitalia.it, alessio.vetrano@telecomitalia.it, "
-								+ "andrea.turella@telecomitalia.it,  maurizio.cabras@telecomitalia.it,  alessandro.calabretta@telecomitalia.it,  "
-								+ "laura.vignozzi@telecomitalia.it, giovannipietro.farris@telecomitalia.it, matteo.bassi@telecomitalia.it, claudia.vaccari@telecomitalia.it, "
-								+ "nicola.noferi@telecomitalia.it, sergio.nobili@telecomitalia.it, demetrio.festa@telecomitalia.it, beatrice.pedani@telecomitalia.it, gabriele.piccini@telecomitalia.it, davide.dambrosio@telecomitalia.it");
-						// Costruisco il destinatario per conoscenza a seconda dell'AOL
-						switch (recordset.getString(AOL)) {
-						case "ABM":
-							destinatarioCCtxt.setText(destinatarioCCtxt.getText()+ ", "+ ABM);
-							break;
-						case "LAZ":
-							destinatarioCCtxt.setText(destinatarioCCtxt.getText()+ ", "+ LAZ);
-							break;
-						case "SAR":
-							destinatarioCCtxt.setText(destinatarioCCtxt.getText()+ ", " + SAR);
-							break;
-						case "ROM":
-							destinatarioCCtxt.setText(destinatarioCCtxt.getText()+ ", " + ROM);
-							break;
-						case "TOE":
-							destinatarioCCtxt.setText(destinatarioCCtxt.getText()+ ", " + TOE);
-							break;
-						case "TOO":
-							destinatarioCCtxt.setText(destinatarioCCtxt.getText()+ ", " + TOO);
-							break;
-						case "LIG":
-							destinatarioCCtxt.setText(destinatarioCCtxt.getText()+ ", " + LIG);
-							break;
-						default:
-							//Serve per aggiungere eventuali altre AOL. L'evento non si verificherà mai
-							JOptionPane.showMessageDialog(null, "AOL non identificata: " + recordset.getString(AOL));
+						if (avvio_o_simulazione) {
+							//Costruire la mail
+							destinatariotxt.setText(
+									"antonio.argenziano@telecomitalia.it, massimo.dominici@telecomitalia.it, andrea.turella@telecomitalia.it");
+							destinatarioCCtxt.setText(
+									"fabrizio.adanti@telecomitalia.it, adriano.calvini@telecomitalia.it, paolo.bartolini@telecomitalia.it, mauro.dinicola@telecomitalia.it, "
+											+ "emanuela.chetta@telecomitalia.it, raffaele.guarracino@telecomitalia.it, tommaso.leonetti@telecomitalia.it, giorgio.mecocci@telecomitalia.it, "
+											+ "pasquale.mastrantoni@telecomitalia.it, alessio.vetrano@telecomitalia.it, "
+											+ "andrea.turella@telecomitalia.it,  maurizio.cabras@telecomitalia.it,  alessandro.calabretta@telecomitalia.it,  "
+											+ "laura.vignozzi@telecomitalia.it, giovannipietro.farris@telecomitalia.it, matteo.bassi@telecomitalia.it, claudia.vaccari@telecomitalia.it, "
+											+ "nicola.noferi@telecomitalia.it, sergio.nobili@telecomitalia.it, demetrio.festa@telecomitalia.it, beatrice.pedani@telecomitalia.it, gabriele.piccini@telecomitalia.it, davide.dambrosio@telecomitalia.it");
+							// Costruisco il destinatario per conoscenza a seconda dell'AOL
+							switch (recordset.getString(AOL)) {
+							case "ABM":
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + ABM);
+								break;
+							case "LAZ":
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + LAZ);
+								break;
+							case "SAR":
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + SAR);
+								break;
+							case "ROM":
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + ROM);
+								break;
+							case "TOE":
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + TOE);
+								break;
+							case "TOO":
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + TOO);
+								break;
+							case "LIG":
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + LIG);
+								break;
+							default:
+								//Serve per aggiungere eventuali altre AOL. L'evento non si verificherà mai
+								JOptionPane.showMessageDialog(null,
+										"AOL non identificata: " + recordset.getString(AOL));
+							}
+						} else {
+							// modalità simulazione: la mail viene inviata a me
+							destinatariotxt.setText("matteo.bassi@telecomitalia.it");
+							destinatarioCCtxt.setText("matteo.bassi@telecomitalia.it");
 						}
 						//Fine destinatario per conoscenza
 						//Costruisco l'oggetto della mail------------------

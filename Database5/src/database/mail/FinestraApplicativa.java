@@ -122,7 +122,7 @@ abstract class FinestraApplicativa {
 	    btnEstraiDati.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
 	    		//JOptionPane.showMessageDialog(FinestraComando, "Estrai Dati");
-	    		EstraiDatidaFile();
+	    		EstraiDatidaFile(true);
 	    	}
 	    });
 	    btnEstraiDati.setToolTipText("Analizza il file");
@@ -133,14 +133,6 @@ abstract class FinestraApplicativa {
 	    btnRicercaFile.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		CollegaFileAccess();
-	    		/*trovafileAccess=new FileDialogWindows("Access File","accdb","mdb");
-	    		if (trovafileAccess.getEsito()==1) {
-	    			btnEstraiDati.setVisible(true);
-	    			btnSimula.setVisible(true);
-		    		JOptionPane.showMessageDialog(FinestraComando, "File selezionato");
-	    		} else {
-		    		JOptionPane.showMessageDialog(FinestraComando, "File NON selezionato");
-	    		}*/
 	    	}
 	    });
 	    btnRicercaFile.setToolTipText("Ricerca il file da elaborare sul PC");
@@ -151,7 +143,7 @@ abstract class FinestraApplicativa {
 	    btnSimula.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		JOptionPane.showMessageDialog(FinestraComando, "Simula");
-	    		SimulaEstraiDati();
+	    		EstraiDatidaFile(false);
 	    	}
 	    });
 	    btnSimula.setToolTipText("Simulazione mail");
@@ -162,7 +154,7 @@ abstract class FinestraApplicativa {
 	
 	    
 	}
-	abstract void EstraiDatidaFile();
+	abstract void EstraiDatidaFile(boolean avvio_o_simulazione);
 	abstract void SimulaEstraiDati();
 	abstract void CollegaFileAccess();
 }
