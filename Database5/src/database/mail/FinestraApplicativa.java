@@ -51,7 +51,6 @@ abstract class FinestraApplicativa {
 		
 		usrtxt = new JTextField();
 		usrtxt.setToolTipText("Inserire la matricola TIM");
-		//usrtxt.setText("08043160");
 		usrtxt.setBounds(246, 41, 87, 26);
 		FinestraComando.getContentPane().add(usrtxt);
 		usrtxt.setColumns(10);
@@ -73,7 +72,6 @@ abstract class FinestraApplicativa {
 		
 		destinatariotxt = new JTextField();
 		destinatariotxt.setToolTipText("Destinatari A:");
-		//destinatariotxt.setText("matteo.bassi@telecomitalia.it");
 		destinatariotxt.setBounds(246, 161, 230, 26);
 		FinestraComando.getContentPane().add(destinatariotxt);
 		destinatariotxt.setColumns(10);
@@ -155,6 +153,6 @@ abstract class FinestraApplicativa {
 	    
 	}
 	abstract void EstraiDatidaFile(boolean avvio_o_simulazione);
-	abstract void SimulaEstraiDati();
+	//abstract void SimulaEstraiDati();
 	abstract void CollegaFileAccess();
 }

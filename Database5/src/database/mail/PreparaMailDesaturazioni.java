@@ -241,138 +241,6 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			JOptionPane.showMessageDialog(FinestraComando, "Errore: "+getErrore()+" il pulsante non funzione");
 		}
 	} //Fine estrai dati
-	public void SimulaEstraiDati() {
-		Statement statement=null;
-		ResultSet recordset=null;
-
-		if (getErrore()==0) {
-			//inserire codice con sql
-			try {
-				int i=0;
-				int mailinviate=0;
-				int contamaildainviare=0;
-				InviaMailTim posta = new InviaMailTim(mittentetxt.getText(),usrtxt.getText(),"");
-				/*istruzione setAutoCommit necessaria per rendere aggiornabile ogni record del recordset
-				senza tale istruzione viene aggiornato solamente il primo record del recorset*/
-				connessioneDB.setAutoCommit(false);
-				// Step 2.B: Creating JDBC Statement
-				//statement=connessioneDB.createStatement();//questo statement apre di default il recordset scrollabile solo in avanti ed in sola lettura
-				//serve a dichiarere se il recordset potrà essere scorso solamente in avanti e potrà essere aggiornabile
-				statement=connessioneDB.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-				// Step 2.C: Executing SQL &amp; retrieve data into recordSet
-				//recordset = statement.executeQuery("SELECT * FROM Desaturazioni WHERE [N# LP] = '1693/2018'");
-				recordset = statement.executeQuery("SELECT * FROM Desaturazioni_Locale WHERE DataInvioMail is Null AND TD is Not Null AND [N# LP] is Not Null AND WR is Not Null AND [Data programmata] is Not Null");
-				// Conteggio record
-				while (recordset.next()){
-					//System.out.println(recordset.getString(CENTRALE)+ " - "+ recordset.getInt(3)+ " - "+recordset.getString(AOL));
-					i+=1;
-					//Controllo se il campo AOL è scritto correttamente
-					String Temp=recordset.getString(AOL);
-					boolean controlloAOL=(Temp.matches("ABM")|| Temp.matches("LAZ")|| Temp.matches("ROM")|| Temp.matches("SAR")|| Temp.matches("TOE")|| Temp.matches("TOO")|| Temp.matches("LIG"));
-					//Fine controllo campo AOL
-					//Controllo se non ci sono stringhe vuote
-					boolean controllodati=controlloAOL && (recordset.getString(NLP)!="")&&(recordset.getString(TD)!="");
-					//Fine controllo stringhe vuote
-					if (controllodati) {
-						contamaildainviare++;
-						//Costruire la mail
-						destinatariotxt.setText("matteo.bassi@telecomitalia.it");
-						destinatarioCCtxt.setText("matteo.bassi@telecomitalia.it");
-						//Costruisco l'oggetto della mail------------------
-						oggettotxt.setText("Richiesta lavoro programmato "+ recordset.getString(SOLUZIONE)+ " Centrale "+ 
-								recordset.getString(CENTRALE)+ " TD "+ recordset.getString(TD));
-						// Fine oggetto mail
-						//Costruisco il corpo della mail
-						//Controllo se è il caso IPCOM o meno e definisco il testo finale del corpo della mail 
-						String testofinale;
-						if (recordset.getString(IPCOM).equals("Sì")) {
-							testofinale="Riferimenti: IP-COM - MASTRANTONI PASQUALE - 335.7282189; \nspecialisti NOA: VETRANO ALESSIO 335.1440764 (per CE) e LUPI GIOVANNI 335.1342688 (per C1)";
-						}else {
-							testofinale="Per la consueta verifica di funzionalità/raggiungibilità i colleghi che interverranno dovranno contattare N.NOA/C.M.F tramite Help me";
-						}
-						//Conversione formato data
-						ConversioneFormatoData convertidata=new ConversioneFormatoData();
-						String dataprogrammataconvertita= convertidata.converti(recordset.getDate(DATA_PROGRAMMATA).toString(), "yyyy-MM-dd", " EEEE dd/MM/yyyy");
-						//Fine conversione formato data
-						corpomailtxt.setText("Si richiede l’Autorizzazione all’Esecuzione di Lavori Programmati inerenti l' "+ recordset.getString(SOLUZIONE) + " Centrale "
-								+ recordset.getString(CENTRALE)+" "+recordset.getString(DSLAM)+ " TD "+ recordset.getString(TD)+ " per "+
-								dataprogrammataconvertita+". \n" + "La richiesta è stata inserita nel portale LP con il numero "+
-								recordset.getString(NLP)+".\nDi seguito sono riportate le WR per i tecnici ON SITE: \n" + 
-								recordset.getString(WR)+ ".\n"+ testofinale +".\nSaluti \nMatteo Bassi");
-						//Prima di inviare la mail apro la finestra di dialogo che chiede conferma invio mail
-						int risposta=JOptionPane.showConfirmDialog(FinestraComando, "Vuoi inviare la mail?", "Conferma invio mail",JOptionPane.OK_CANCEL_OPTION);
-						//La mail parte solo se si dà l'OK dalla finestra di dialogo
-						if (risposta== JOptionPane.OK_OPTION) {
-							//Inizio blocco invio  mail
-							try {
-								posta.Invia(destinatariotxt.getText(), destinatarioCCtxt.getText(), oggettotxt.getText(),
-										corpomailtxt.getText());
-								if (posta.getEsitoInvio() != 0) {
-									setErrore(1);
-									//---------	JOptionPane.showMessageDialog(null, "Posta  Inviata");
-									mailinviate++;						
-									try {
-										//Gestione Data: serve convertire la variabile tipo LocalDate in formato data java.sql.Date
-										//poichè il metodo updateDate richiede una data in formato java.sql
-										LocalDate todayLocalDate = LocalDate.now();
-										java.sql.Date sqlDate= java.sql.Date.valueOf(todayLocalDate);
-										//Fine gestione data
-										recordset.updateDate(DATA_INVIO_MAIL, sqlDate);
-										recordset.updateString(AZIONE, "verifica esecuzione");
-										recordset.updateRow();
-										JOptionPane.showMessageDialog(FinestraComando, "Data  aggiornata OK");
-									} catch (Exception e) {
-										// TODO Auto-generated catch block
-										JOptionPane.showMessageDialog(FinestraComando, "Data non aggiornata");
-										e.printStackTrace();
-									}
-
-								} else {
-									setErrore(3);
-									JOptionPane.showMessageDialog(null, "Errore 3 la posta non è partita");
-								}
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								setErrore(3);
-								JOptionPane.showMessageDialog(null, "Errore 3 la posta non è partita (try/catch)");
-								e.printStackTrace();
-							}
-							//Fine invio mail
-						}//Fine if (JOptionPane...
-					}//fine if (controllodati)
-				}//fine ciclo while
-				//L'istruzione connessioneDB.commit() serve per scrivere gli aggiornamenti sul database
-				connessioneDB.commit();
-				JOptionPane.showMessageDialog(FinestraComando, "Numero di righe: "+ i+ " Numero di mail:" + contamaildainviare + "; "+ "Mail inviate: "+ mailinviate);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(FinestraComando, "Errore SQL");
-			} finally {
-				// Step 3: Closing database connection
-				try {
-					if (connessioneDB != null) {
-						// cleanup resources, once after processing
-						recordset.close();
-						statement.close();
-						// and then finally close connection
-						/*la connessione non può essere chiusa in questo momento
-						 *altrimenti chiudendo l'oggetto connessioneDB non posso
-						 *più premere il bottone estrai dati. 
-						 */
-						connessioneDB.close();
-						btnEstraiDati.setVisible(false);
-						btnSimula.setVisible(false);
-					}
-				} catch (SQLException sqlex) {
-					sqlex.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Errore in chiusura");
-				}
-			}
-		} else {
-			JOptionPane.showMessageDialog(FinestraComando, "Errore: "+getErrore()+" il pulsante non funziona");
-		}
-	}//Fine metodo Simula
 	public void CollegaFileAccess() {
 		FileDialogWindows trovafileAccess=new FileDialogWindows("Access File","accdb","mdb");
 		if (trovafileAccess.getEsito()==1) {
@@ -381,7 +249,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			String PathDB=trovafileAccess.percorsofile();
 			//JOptionPane.showMessageDialog(FinestraComando, "File selezionato: \n" + PathDB);
 			setErrore(0);
-			//INSERIRE IL CODICE PER COLLEGARE DATABASE ACCESS
+			//CODICE PER COLLEGARE DATABASE ACCESS
 			ConnessioneDB connettore=new ConnessioneDB();
 			connessioneDB=connettore.connettiDB(PathDB);
 			if (connettore.getErrore()!=0) {
