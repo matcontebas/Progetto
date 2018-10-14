@@ -40,11 +40,12 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	final int DATA_INVIO_MAIL=34; //colonna 34 del file desaturazioni
 	final String ABM="enzo.cialone@telecomitalia.it, gianluca.dicrescenzo@telecomitalia.it, angelomario.blasioli@telecomitalia.it, marco.vigilante@telecomitalia.it, domenico.montebello@telecomitalia.it, paolo.digirolamo@telecomitalia.it";
 	final String LAZ="giovanna.gerbasio@telecomitalia.it, mario.micci@telecomitalia.it";
-	final String SAR="mauro.mostallino@telecomitalia.it";
+	final String SAR="mauro.mostallino@telecomitalia.it, marco.puddinu@telecomitalia.it";
 	final String ROM="enrico.digiacomo@telecomitalia.it, luca.parlanti@telecomitalia.it, simona.sbandi@telecomitalia.it";
-	final String TOE="gianni.emanuelifrancioli@telecomitalia.it, Paolo.Bruschini@telecomitalia.it, tommaso.scotti@telecomitalia.it, graziano.folli@telecomitalia.it";
+	final String TOE="gianni.emanuelifrancioli@telecomitalia.it, paolo.bruschini@telecomitalia.it, tommaso.scotti@telecomitalia.it, graziano.folli@telecomitalia.it";
 	final String TOO="marco.paoli@telecomitalia.it, JMToscanaOvest@telecomitalia.it";
 	final String LIG="mauro.mazzitello@telecomitalia.it, vittorio.piacenza@telecomitalia.it";
+	final String AGGIORNAMENTO_CAMPO_AZIONE="verifica esecuzione";
 	/**
 	 * Costruttore: inizializza usrtxt, mittentetxt, destinatariotxt, destinatarioCCtxt
 	 * e crea la connessione con il Driver di database.
@@ -73,7 +74,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	public void EstraiDatidaFile(boolean avvio_o_simulazione) {
 		Statement statement=null;
 		ResultSet recordset=null;
-		System.out.println(avvio_o_simulazione);
+		//System.out.println(avvio_o_simulazione);
 		if (getErrore()==0) {
 			try {
 				int i=0;
@@ -106,7 +107,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 							destinatariotxt.setText(
 									"antonio.argenziano@telecomitalia.it, massimo.dominici@telecomitalia.it, andrea.turella@telecomitalia.it");
 							destinatarioCCtxt.setText(
-									"fabrizio.adanti@telecomitalia.it, adriano.calvini@telecomitalia.it, paolo.bartolini@telecomitalia.it, mauro.dinicola@telecomitalia.it, "
+									"fabrizio.adanti@telecomitalia.it, paolo.bartolini@telecomitalia.it, mauro.dinicola@telecomitalia.it, "
 											+ "emanuela.chetta@telecomitalia.it, raffaele.guarracino@telecomitalia.it, tommaso.leonetti@telecomitalia.it, giorgio.mecocci@telecomitalia.it, "
 											+ "pasquale.mastrantoni@telecomitalia.it, alessio.vetrano@telecomitalia.it, "
 											+ "andrea.turella@telecomitalia.it,  maurizio.cabras@telecomitalia.it,  alessandro.calabretta@telecomitalia.it,  "
@@ -186,7 +187,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 										java.sql.Date sqlDate= java.sql.Date.valueOf(todayLocalDate);
 										//Fine gestione data
 										recordset.updateDate(DATA_INVIO_MAIL, sqlDate);
-										recordset.updateString(AZIONE, "verifica esecuzione");
+										recordset.updateString(AZIONE, AGGIORNAMENTO_CAMPO_AZIONE);
 										recordset.updateRow();
 										JOptionPane.showMessageDialog(FinestraComando, "Data  aggiornata OK");
 									} catch (Exception e) {
