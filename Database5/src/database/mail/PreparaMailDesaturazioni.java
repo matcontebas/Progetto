@@ -32,6 +32,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	final int TUTTO_OK=0;
 	final int ERRORE_CONNESSIONE_DRIVER=1;
 	final int ERRORE_CONNESSIONE_DATABASE=2;
+	final int ERRORE_INVIO_POSTA=3;
 	final int errore_sql_tabella_Indirizzi=4;
 	final int errore_chiusura_tabella_destinatari=5;
 	final int CENTRALE = 6;//colonna 6 della tabella Desaturazioni
@@ -170,7 +171,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 								posta.Invia(destinatariotxt.getText(), destinatarioCCtxt.getText(), oggettotxt.getText(),
 										corpomailtxt.getText());
 								if (posta.getEsitoInvio() != 0) {
-									setErrore(1);
+									setErrore(1); //da controllare: probabilmente è corretto setErrore(0)
 									//---------	JOptionPane.showMessageDialog(null, "Posta  Inviata");
 									mailinviate++;						
 									try {
@@ -190,12 +191,12 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 									}
 
 								} else {
-									setErrore(3);
+									setErrore(ERRORE_INVIO_POSTA);
 									JOptionPane.showMessageDialog(null, "Errore 3 la posta non è partita");
 								}
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
-								setErrore(3);
+								setErrore(ERRORE_INVIO_POSTA);
 								JOptionPane.showMessageDialog(null, "Errore 3 la posta non è partita (try/catch)");
 								e.printStackTrace();
 							}
@@ -281,13 +282,13 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		Statement statement=null;
 		ResultSet recordset=null;
 		String risultato="";
-		int i=0;
+		//int i=0;
 		try {
 			//questo statement apre di default il recordset scrollabile solo in avanti ed in sola lettura
 			statement=connessioneDB.createStatement();
 			recordset = statement.executeQuery("SELECT * FROM Destinatari_Mail WHERE Destinatari_Mail.Destinatari = '"+ tipologia + "'");		
 			while (recordset.next()){
-				i+=1;
+				//i+=1;
 				if (recordset.isLast()) {
 					risultato = risultato + recordset.getString("Mail");
 				} else {
@@ -310,8 +311,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				JOptionPane.showMessageDialog(null, "Errore in chiusura da CostruisciDestinatariMail() " + getErrore());
 			}
 		}//Fine blocco Try/Cach/Finally
-		System.out.println("Numero iterazioni: "+i);
-		System.out.println(risultato);
+		//System.out.println("Numero iterazioni: "+i);
+		//System.out.println(risultato);
 		return risultato;
 	}
 

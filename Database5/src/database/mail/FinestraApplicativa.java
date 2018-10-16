@@ -10,7 +10,6 @@ import javax.swing.border.TitledBorder;
 import RicercaFile.FileDialogWindows;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;
