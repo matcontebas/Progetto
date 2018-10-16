@@ -61,7 +61,6 @@ abstract class FinestraApplicativa {
 		
 		mittentetxt = new JTextField();
 		mittentetxt.setToolTipText("Inserire mittente della mail");
-		//mittentetxt.setText("matteo.bassi@telecomitalia.it");
 		mittentetxt.setBounds(246, 97, 230, 26);
 		FinestraComando.getContentPane().add(mittentetxt);
 		mittentetxt.setColumns(10);
@@ -119,7 +118,6 @@ abstract class FinestraApplicativa {
 	    btnEstraiDati.setVisible(false);
 	    btnEstraiDati.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
-	    		//JOptionPane.showMessageDialog(FinestraComando, "Estrai Dati");
 	    		EstraiDatidaFile(true);
 	    	}
 	    });
@@ -140,7 +138,6 @@ abstract class FinestraApplicativa {
 	    btnSimula = new JButton("Simula");
 	    btnSimula.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
-	    		JOptionPane.showMessageDialog(FinestraComando, "Simula");
 	    		EstraiDatidaFile(false);
 	    	}
 	    });
@@ -153,6 +150,5 @@ abstract class FinestraApplicativa {
 	    
 	}
 	abstract void EstraiDatidaFile(boolean avvio_o_simulazione);
-	//abstract void SimulaEstraiDati();
 	abstract void CollegaFileAccess();
 }

@@ -24,9 +24,16 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 * 1: errore nella connessione al driver
 	 * 2: errore nella connessione con il database
 	 * 3: errore invio posta
+	 * 4: errore sql nell'interrogazione della tabella Destinatari_Mail
+	 * 5: errore chiusura tabella destinatari
 	 */
 	private int errore;
 	private Connection connessioneDB=null;
+	final int TUTTO_OK=0;
+	final int ERRORE_CONNESSIONE_DRIVER=1;
+	final int ERRORE_CONNESSIONE_DATABASE=2;
+	final int errore_sql_tabella_Indirizzi=4;
+	final int errore_chiusura_tabella_destinatari=5;
 	final int CENTRALE = 6;//colonna 6 della tabella Desaturazioni
 	final int DSLAM = 7;//colonna 7 della tabella Desaturazioni
 	final int SOLUZIONE = 11;//colonna 11 della tabella Desaturazioni
@@ -38,13 +45,6 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	final int AOL=30; //colonna 30 del file desaturazioni
 	final int AZIONE=32; //colonna 32 della tabella desaturazioni
 	final int DATA_INVIO_MAIL=34; //colonna 34 del file desaturazioni
-	final String ABM="enzo.cialone@telecomitalia.it, gianluca.dicrescenzo@telecomitalia.it, angelomario.blasioli@telecomitalia.it, marco.vigilante@telecomitalia.it, domenico.montebello@telecomitalia.it, paolo.digirolamo@telecomitalia.it";
-	final String LAZ="giovanna.gerbasio@telecomitalia.it, mario.micci@telecomitalia.it";
-	final String SAR="mauro.mostallino@telecomitalia.it, marco.puddinu@telecomitalia.it";
-	final String ROM="enrico.digiacomo@telecomitalia.it, luca.parlanti@telecomitalia.it, simona.sbandi@telecomitalia.it";
-	final String TOE="gianni.emanuelifrancioli@telecomitalia.it, paolo.bruschini@telecomitalia.it, tommaso.scotti@telecomitalia.it, graziano.folli@telecomitalia.it";
-	final String TOO="marco.paoli@telecomitalia.it, JMToscanaOvest@telecomitalia.it";
-	final String LIG="mauro.mazzitello@telecomitalia.it, vittorio.piacenza@telecomitalia.it";
 	final String AGGIORNAMENTO_CAMPO_AZIONE="verifica esecuzione";
 	/**
 	 * Costruttore: inizializza usrtxt, mittentetxt, destinatariotxt, destinatarioCCtxt
@@ -52,29 +52,26 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 */
 	public PreparaMailDesaturazioni() {
 		//Costruttore
-		//inizializzo i valori di default dei campi della finestra
-		usrtxt.setText("08043160");
-		mittentetxt.setText("matteo.bassi@telecomitalia.it");
-		destinatariotxt.setText("matteo.bassi@telecomitalia.it");
-		destinatarioCCtxt.setText("matteo.bassi@telecomitalia.it");
 		//eseguire connessione a Driver
 		ConnessioneDriver driverconn=new  ConnessioneDriver();
 		driverconn.connettiDriver();
 		// controllo che la connessione al Driver sia andata a buon fine verificando
 		// che il valore restituito dal metodo getErrore sia diverso da zero
-		if (driverconn.getErrore() != 0) {
+		if (driverconn.getErrore() != TUTTO_OK) {
 			//JOptionPane.showMessageDialog(FinestraComando, "Driver di database caricato");
-			setErrore(0);//errore=0 significa tutto regolare
+			setErrore(TUTTO_OK);//errore=0 significa tutto regolare
 		}
 		else {
 			JOptionPane.showMessageDialog(FinestraComando, "Driver di database non corretto");
-			setErrore(1); //errore=1 significa  nella connessione con il driver
+			setErrore(ERRORE_CONNESSIONE_DRIVER); //errore=1 significa  nella connessione con il driver
 		}
 	}
 	public void EstraiDatidaFile(boolean avvio_o_simulazione) {
 		Statement statement=null;
 		ResultSet recordset=null;
-		//System.out.println(avvio_o_simulazione);
+		//inizializzo i valori di default dei campi della finestra
+		usrtxt.setText(CostruisciDestinatariMail("UserMittente"));
+		mittentetxt.setText(CostruisciDestinatariMail("Mittente"));
 		if (getErrore()==0) {
 			try {
 				int i=0;
@@ -104,37 +101,30 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 						contamaildainviare++;
 						if (avvio_o_simulazione) {
 							//Costruire la mail
-							destinatariotxt.setText(
-									"antonio.argenziano@telecomitalia.it, massimo.dominici@telecomitalia.it, andrea.turella@telecomitalia.it");
-							destinatarioCCtxt.setText(
-									"fabrizio.adanti@telecomitalia.it, paolo.bartolini@telecomitalia.it, mauro.dinicola@telecomitalia.it, "
-											+ "emanuela.chetta@telecomitalia.it, raffaele.guarracino@telecomitalia.it, tommaso.leonetti@telecomitalia.it, giorgio.mecocci@telecomitalia.it, "
-											+ "pasquale.mastrantoni@telecomitalia.it, alessio.vetrano@telecomitalia.it, "
-											+ "andrea.turella@telecomitalia.it,  maurizio.cabras@telecomitalia.it,  alessandro.calabretta@telecomitalia.it,  "
-											+ "laura.vignozzi@telecomitalia.it, giovannipietro.farris@telecomitalia.it, matteo.bassi@telecomitalia.it, claudia.vaccari@telecomitalia.it, "
-											+ "nicola.noferi@telecomitalia.it, sergio.nobili@telecomitalia.it, demetrio.festa@telecomitalia.it, beatrice.pedani@telecomitalia.it, gabriele.piccini@telecomitalia.it, davide.dambrosio@telecomitalia.it");
+							destinatariotxt.setText(CostruisciDestinatariMail("DestinatarioA"));
+							destinatarioCCtxt.setText(CostruisciDestinatariMail("DestinatarioCC"));
 							// Costruisco il destinatario per conoscenza a seconda dell'AOL
 							switch (recordset.getString(AOL)) {
 							case "ABM":
-								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + ABM);
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("ABM"));
 								break;
 							case "LAZ":
-								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + LAZ);
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("LAZ"));
 								break;
 							case "SAR":
-								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + SAR);
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("SAR"));
 								break;
 							case "ROM":
-								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + ROM);
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("ROM"));
 								break;
 							case "TOE":
-								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + TOE);
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("TOE"));
 								break;
 							case "TOO":
-								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + TOO);
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("TOO"));
 								break;
 							case "LIG":
-								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + LIG);
+								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("LIG"));
 								break;
 							default:
 								//Serve per aggiungere eventuali altre AOL. L'evento non si verificherà mai
@@ -143,8 +133,11 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 							}
 						} else {
 							// modalità simulazione: la mail viene inviata a me
-							destinatariotxt.setText("matteo.bassi@telecomitalia.it");
-							destinatarioCCtxt.setText("matteo.bassi@telecomitalia.it");
+							//memorizzo in temp il Mittente dalla tabella Destinatari_Mail
+							String temp=CostruisciDestinatariMail("Mittente");
+							//in modalità simulazione il destinatario della mail è solo il mittente
+							destinatariotxt.setText(temp);
+							destinatarioCCtxt.setText(temp);
 						}
 						//Fine destinatario per conoscenza
 						//Costruisco l'oggetto della mail------------------
@@ -249,16 +242,16 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			btnSimula.setVisible(true);
 			String PathDB=trovafileAccess.percorsofile();
 			//JOptionPane.showMessageDialog(FinestraComando, "File selezionato: \n" + PathDB);
-			setErrore(0);
+			setErrore(TUTTO_OK);
 			//CODICE PER COLLEGARE DATABASE ACCESS
 			ConnessioneDB connettore=new ConnessioneDB();
 			connessioneDB=connettore.connettiDB(PathDB);
 			if (connettore.getErrore()!=0) {
 				JOptionPane.showMessageDialog(FinestraComando, "Connessione a database stabilita");
-				setErrore(0);
+				setErrore(TUTTO_OK);
 			} else {
-				JOptionPane.showMessageDialog(FinestraComando, "Connessione a database non riuscita");
-				setErrore(2);
+				setErrore(ERRORE_CONNESSIONE_DATABASE);
+				JOptionPane.showMessageDialog(FinestraComando, "Connessione a database non riuscita "+ getErrore());
 			}
 		} else {
 			JOptionPane.showMessageDialog(FinestraComando, "File NON selezionato");
@@ -273,8 +266,53 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	/**
 	 * @param errore the errore to set
 	 */
-	public void setErrore(int errore) {
+	protected void setErrore(int errore) {
 		this.errore = errore;
+	}
+	/**
+	 * Il metodo costruisce una stringa con i destinatari di una mail 
+	 * prendendoli dalla tabella del file Access Destinatari_Mail a seconda della tipologia
+	 * @param tipologia è una stringa che individua i tipi di destinatario come indicati in tabella Destinatari_Mail
+	 * (DestinatariA, DestinatariCC, Mittente, User, ABM, LAZ, SAR, etc)
+	 * @return restituisce la stringa con il/i destinatari
+	 */
+	public String CostruisciDestinatariMail (String tipologia) {
+		//-----------GESTIRE ERRORI IN CASO l'SQL non trovi match---------------
+		Statement statement=null;
+		ResultSet recordset=null;
+		String risultato="";
+		int i=0;
+		try {
+			//questo statement apre di default il recordset scrollabile solo in avanti ed in sola lettura
+			statement=connessioneDB.createStatement();
+			recordset = statement.executeQuery("SELECT * FROM Destinatari_Mail WHERE Destinatari_Mail.Destinatari = '"+ tipologia + "'");		
+			while (recordset.next()){
+				i+=1;
+				if (recordset.isLast()) {
+					risultato = risultato + recordset.getString("Mail");
+				} else {
+					risultato = risultato +  recordset.getString("Mail") + ", ";
+				}
+			}//Fine ciclo While
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			setErrore(errore_sql_tabella_Indirizzi);
+			JOptionPane.showMessageDialog(FinestraComando, "Errore SQL da CostruisciDestinatariMail() "+ getErrore());
+		}finally {
+			try {
+				recordset.close();
+				statement.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				setErrore(errore_chiusura_tabella_destinatari);
+				JOptionPane.showMessageDialog(null, "Errore in chiusura da CostruisciDestinatariMail() " + getErrore());
+			}
+		}//Fine blocco Try/Cach/Finally
+		System.out.println("Numero iterazioni: "+i);
+		System.out.println(risultato);
+		return risultato;
 	}
 
 
