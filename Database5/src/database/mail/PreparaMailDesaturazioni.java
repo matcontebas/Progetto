@@ -149,10 +149,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 						//Controllo se è il caso IPCOM o meno e definisco il testo finale del corpo della mail 
 						String testofinale;
 						if (recordset.getString(IPCOM).equals("Sì")) {
-							//testofinale="Riferimenti: IP-COM - MASTRANTONI PASQUALE - 335.7282189; \nspecialisti NOA: VETRANO ALESSIO 335.1440764 (per CE) e LUPI GIOVANNI 335.1342688 (per C1)";
 							testofinale=CostruisciTestoMail("IPCOM_SI");
 						}else {
-							//testofinale="Per la consueta verifica di funzionalità/raggiungibilità i colleghi che interverranno dovranno contattare N.NOA/C.M.F tramite Help me";
 							testofinale=CostruisciTestoMail("IPCOM_NO");
 						}
 						//Conversione formato data
