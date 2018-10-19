@@ -149,9 +149,11 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 						//Controllo se è il caso IPCOM o meno e definisco il testo finale del corpo della mail 
 						String testofinale;
 						if (recordset.getString(IPCOM).equals("Sì")) {
-							testofinale="Riferimenti: IP-COM - MASTRANTONI PASQUALE - 335.7282189; \nspecialisti NOA: VETRANO ALESSIO 335.1440764 (per CE) e LUPI GIOVANNI 335.1342688 (per C1)";
+							//testofinale="Riferimenti: IP-COM - MASTRANTONI PASQUALE - 335.7282189; \nspecialisti NOA: VETRANO ALESSIO 335.1440764 (per CE) e LUPI GIOVANNI 335.1342688 (per C1)";
+							testofinale=CostruisciTestoMail("IPCOM_SI");
 						}else {
-							testofinale="Per la consueta verifica di funzionalità/raggiungibilità i colleghi che interverranno dovranno contattare N.NOA/C.M.F tramite Help me";
+							//testofinale="Per la consueta verifica di funzionalità/raggiungibilità i colleghi che interverranno dovranno contattare N.NOA/C.M.F tramite Help me";
+							testofinale=CostruisciTestoMail("IPCOM_NO");
 						}
 						//Conversione formato data
 						ConversioneFormatoData convertidata=new ConversioneFormatoData();
@@ -277,7 +279,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 * (DestinatariA, DestinatariCC, Mittente, User, ABM, LAZ, SAR, etc)
 	 * @return restituisce la stringa con il/i destinatari
 	 */
-	public String CostruisciDestinatariMail (String tipologia) {
+	private String CostruisciDestinatariMail (String tipologia) {
 		//-----------GESTIRE ERRORI IN CASO l'SQL non trovi match---------------
 		Statement statement=null;
 		ResultSet recordset=null;
@@ -316,5 +318,43 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		return risultato;
 	}
 
+	private String CostruisciTestoMail (String tipo) {
+		//-----------GESTIRE ERRORI IN CASO l'SQL non trovi match---------------
+		Statement statement=null;
+		ResultSet recordset=null;
+		String risultato="";
+		//int i=0;
+		try {
+			//questo statement apre di default il recordset scrollabile solo in avanti ed in sola lettura
+			statement=connessioneDB.createStatement();
+			recordset = statement.executeQuery("SELECT * FROM Testi_Mail WHERE Testi_Mail.TipoTesto = '"+ tipo + "'");		
+			while (recordset.next()){
+				//i+=1;
+				if (recordset.isLast()) {
+					risultato = risultato + recordset.getString("Testo");
+				} else {
+					risultato = risultato +  recordset.getString("Testo") + ", ";
+				}
+			}//Fine ciclo While
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			setErrore(errore_sql_tabella_Indirizzi);
+			JOptionPane.showMessageDialog(FinestraComando, "Errore SQL da CostruisciTestoMail() "+ getErrore());
+		}finally {
+			try {
+				recordset.close();
+				statement.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				setErrore(errore_chiusura_tabella_destinatari);
+				JOptionPane.showMessageDialog(null, "Errore in chiusura da CostruisciTestoMail() " + getErrore());
+			}
+		}//Fine blocco Try/Cach/Finally
+		//System.out.println("Numero iterazioni: "+i);
+		//System.out.println(risultato);
+		return risultato;
 
+	}
 }
