@@ -33,8 +33,9 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	final int ERRORE_CONNESSIONE_DRIVER=1;
 	final int ERRORE_CONNESSIONE_DATABASE=2;
 	final int ERRORE_INVIO_POSTA=3;
-	final int errore_sql_tabella_Indirizzi=4;
-	final int errore_chiusura_tabella_destinatari=5;
+	final int ERRORE_SQL_TABELLA_PRINCIPALE=4;
+	final int errore_sql_tabella_Indirizzi=5;
+	final int errore_chiusura_tabella_destinatari=6;
 	final int CENTRALE = 6;//colonna 6 della tabella Desaturazioni
 	final int DSLAM = 7;//colonna 7 della tabella Desaturazioni
 	final int SOLUZIONE = 11;//colonna 11 della tabella Desaturazioni
@@ -160,7 +161,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 						corpomailtxt.setText("Si richiede l’Autorizzazione all’Esecuzione di Lavori Programmati inerenti l' "+ recordset.getString(SOLUZIONE) + " Centrale "
 								+ recordset.getString(CENTRALE)+" "+recordset.getString(DSLAM)+ " TD "+ recordset.getString(TD)+ " per "+
 								dataprogrammataconvertita+". \n" + "La richiesta è stata inserita nel portale LP con il numero "+
-								recordset.getString(NLP)+".\nDi seguito sono riportate le WR per i tecnici ON SITE: \n" + 
+								recordset.getString(NLP)+".\n" + CostruisciTestoMail("WRTecnici") + " \n" + 
 								recordset.getString(WR)+ ".\n"+ testofinale +".\nSaluti \nMatteo Bassi");
 						//Prima di inviare la mail apro la finestra di dialogo che chiede conferma invio mail
 						int risposta=JOptionPane.showConfirmDialog(FinestraComando, "Vuoi inviare la mail?", "Conferma invio mail",JOptionPane.OK_CANCEL_OPTION);
@@ -171,7 +172,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 								posta.Invia(destinatariotxt.getText(), destinatarioCCtxt.getText(), oggettotxt.getText(),
 										corpomailtxt.getText());
 								if (posta.getEsitoInvio() != 0) {
-									setErrore(1); //da controllare: probabilmente è corretto setErrore(0)
+									setErrore(TUTTO_OK);
 									//---------	JOptionPane.showMessageDialog(null, "Posta  Inviata");
 									mailinviate++;						
 									try {
@@ -210,7 +211,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(FinestraComando, "Errore SQL");
+				setErrore(ERRORE_SQL_TABELLA_PRINCIPALE);
+				JOptionPane.showMessageDialog(FinestraComando, "Errore SQL Tabella principale" + getErrore());
 			} finally {
 				// Step 3: Closing database connection
 				try {
