@@ -94,7 +94,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 					i+=1;
 					//Controllo se il campo AOL è scritto correttamente
 					String Temp=recordset.getString(AOL);
-					boolean controlloAOL=(Temp.matches("ABM")|| Temp.matches("LAZ")|| Temp.matches("ROM")|| Temp.matches("SAR")|| Temp.matches("TOE")|| Temp.matches("TOO")|| Temp.matches("LIG"));
+					boolean controlloAOL=(Temp.matches("ABM")|| Temp.matches("LAZ")|| Temp.matches("ROM")|| Temp.matches("SAR")|| Temp.matches("TOE")|| Temp.matches("TOO")|| Temp.matches("LIG")||Temp.matches("LACP"));
 					//Fine controllo campo AOL
 					//Controllo se non ci sono stringhe vuote
 					boolean controllodati=controlloAOL && (recordset.getString(NLP)!="")&&(recordset.getString(TD)!="");
@@ -127,6 +127,10 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 								break;
 							case "LIG":
 								destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("LIG"));
+								break;
+							case "LACP":
+								//inserire codice per LACP
+								JOptionPane.showMessageDialog(FinestraComando, "LACP");
 								break;
 							default:
 								//Serve per aggiungere eventuali altre AOL. L'evento non si verificherà mai
