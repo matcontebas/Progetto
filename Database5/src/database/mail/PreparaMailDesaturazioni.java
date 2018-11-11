@@ -150,15 +150,11 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 						oggettotxt.setText("Richiesta lavoro programmato "+ recordset.getString(SOLUZIONE)+ " Centrale "+ 
 								recordset.getString(CENTRALE)+ " TD "+ recordset.getString(TD));
 						// Fine oggetto mail
-						//Costruisco il corpo della mail
-						//Controllo se è il caso IPCOM o meno e definisco il testo finale del corpo della mail 
-						//String testofinale="";
-						
+						//Costruisco il corpo della mail					
 						//Conversione formato data
 						ConversioneFormatoData convertidata=new ConversioneFormatoData();
 						String dataprogrammataconvertita= convertidata.converti(recordset.getDate(DATA_PROGRAMMATA).toString(), "yyyy-MM-dd", " EEEE dd/MM/yyyy");
 						//Fine conversione formato data
-
 						//questo switch serve per variare il corpo della mail in funzione del valore del campo AOL
 						switch (recordset.getString(AOL)) {
 						case "LACP":
@@ -170,6 +166,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 							break;
 							default:
 								//il caso default comprende tutti i casi in cui AOL è valorizzata da ABM fino a TOO
+								//Controllo se è il caso IPCOM o meno e definisco il testo finale del corpo della mail 
 								String testofinale="";
 								if (recordset.getString(IPCOM).equals("Sì")) {
 									testofinale=CostruisciTestoMail("IPCOM_SI");
@@ -182,15 +179,6 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 										recordset.getString(NLP)+".\n" + CostruisciTestoMail("WRTecnici") + " \n" + 
 										recordset.getString(WR)+ ".\n"+ testofinale +"\nSaluti \nMatteo Bassi");	
 						}
-
-
-						/*
-						corpomailtxt.setText("Si richiede l’Autorizzazione all’Esecuzione di Lavori Programmati inerenti l' "+ recordset.getString(SOLUZIONE) + " Centrale "
-								+ recordset.getString(CENTRALE)+" "+recordset.getString(DSLAM)+ " TD "+ recordset.getString(TD)+ " per "+
-								dataprogrammataconvertita+". \n" + "La richiesta è stata inserita nel portale LP con il numero "+
-								recordset.getString(NLP)+".\n" + testointermedio + " \n" + 
-								recordset.getString(WR)+ ".\n"+ testofinale +"\nSaluti \nMatteo Bassi");
-						*/
 						//Prima di inviare la mail apro la finestra di dialogo che chiede conferma invio mail
 						int risposta=JOptionPane.showConfirmDialog(FinestraComando, "Vuoi inviare la mail?", "Conferma invio mail",JOptionPane.OK_CANCEL_OPTION);
 						//La mail parte solo se si dà l'OK dalla finestra di dialogo
