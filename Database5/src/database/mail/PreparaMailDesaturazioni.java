@@ -88,7 +88,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				//serve a dichiarere se il recordset potrà essere scorso solamente in avanti e potrà essere aggiornabile
 				statement=connessioneDB.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 				// Step 2.C: Executing SQL &amp; retrieve data into recordSet
-				recordset = statement.executeQuery("SELECT * FROM Desaturazioni_Locale WHERE DataInvioMail is Null AND TD is Not Null AND [N# LP] is Not Null AND WR is Not Null AND [Data programmata] is Not Null");
+				recordset = statement.executeQuery("SELECT * FROM Desaturazioni_Locale WHERE DataInvioMail is Null AND TD is Not Null AND [N# LP] is Not Null AND WR is Not Null AND [IP NW]is Not Null AND [Data programmata] is Not Null");
 				// Conteggio record
 				while (recordset.next()){
 					i+=1;
