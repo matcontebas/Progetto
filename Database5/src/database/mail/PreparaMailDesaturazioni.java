@@ -54,7 +54,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 */
 	public PreparaMailDesaturazioni() {
 		//Costruttore
-		//eseguire connessione a Driver
+		//eseguire connessione a Driver: la classe ConnessioneDriver è nella mia libreria DatabaseLib.jar
 		ConnessioneDriver driverconn=new  ConnessioneDriver();
 		driverconn.connettiDriver();
 		// controllo che la connessione al Driver sia andata a buon fine verificando
@@ -148,7 +148,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 						//Fine destinatario per conoscenza
 						//Costruisco l'oggetto della mail------------------
 						oggettotxt.setText("Richiesta lavoro programmato "+ recordset.getString(SOLUZIONE)+ " Centrale "+ 
-								recordset.getString(CENTRALE)+ " TD "+ recordset.getString(TD));
+								recordset.getString(CENTRALE)+ " "+ recordset.getString(DSLAM)+ " TD "+ recordset.getString(TD));
 						// Fine oggetto mail
 						//Costruisco il corpo della mail					
 						//Conversione formato data
@@ -262,7 +262,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			String PathDB=trovafileAccess.percorsofile();
 			//JOptionPane.showMessageDialog(FinestraComando, "File selezionato: \n" + PathDB);
 			setErrore(TUTTO_OK);
-			//CODICE PER COLLEGARE DATABASE ACCESS
+			//CODICE PER COLLEGARE DATABASE ACCESS: la classe ConnessioneDB è una classe di libreria mia contenuta in DatabaseLib.jar
 			ConnessioneDB connettore=new ConnessioneDB();
 			connessioneDB=connettore.connettiDB(PathDB);
 			if (connettore.getErrore()!=0) {
