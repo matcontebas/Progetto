@@ -79,6 +79,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				int i=0;
 				int mailinviate=0;
 				int contamaildainviare=0;
+				boolean invioposta;
 				InviaMailTim posta = new InviaMailTim(mittentetxt.getText(),usrtxt.getText(),"");
 				/*istruzione setAutoCommit necessaria per rendere aggiornabile ogni record del recordset
 				senza tale istruzione viene aggiornato solamente il primo record del recorset*/
@@ -179,46 +180,14 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 										recordset.getString(NLP)+".\n" + CostruisciTestoMail("WRTecnici") + " \n" + 
 										recordset.getString(WR)+ ".\n"+ testofinale +"\nSaluti \nMatteo Bassi");	
 						}
-						//Prima di inviare la mail apro la finestra di dialogo che chiede conferma invio mail
-						int risposta=JOptionPane.showConfirmDialog(FinestraComando, "Vuoi inviare la mail?", "Conferma invio mail",JOptionPane.OK_CANCEL_OPTION);
-						//La mail parte solo se si dà l'OK dalla finestra di dialogo
-						if (risposta== JOptionPane.OK_OPTION) {
-							//Inizio blocco invio  mail
-							try {
-								posta.Invia(destinatariotxt.getText(), destinatarioCCtxt.getText(), oggettotxt.getText(),
-										corpomailtxt.getText());
-								if (posta.getEsitoInvio() != 0) {
-									setErrore(TUTTO_OK);
-									//---------	JOptionPane.showMessageDialog(null, "Posta  Inviata");
-									mailinviate++;						
-									try {
-										//Gestione Data: serve convertire la variabile tipo LocalDate in formato data java.sql.Date
-										//poichè il metodo updateDate richiede una data in formato java.sql
-										LocalDate todayLocalDate = LocalDate.now();
-										java.sql.Date sqlDate= java.sql.Date.valueOf(todayLocalDate);
-										//Fine gestione data
-										recordset.updateDate(DATA_INVIO_MAIL, sqlDate);
-										recordset.updateString(AZIONE, AGGIORNAMENTO_CAMPO_AZIONE);
-										recordset.updateRow();
-										JOptionPane.showMessageDialog(FinestraComando, "Data  aggiornata OK");
-									} catch (Exception e) {
-										// TODO Auto-generated catch block
-										JOptionPane.showMessageDialog(FinestraComando, "Data non aggiornata");
-										e.printStackTrace();
-									}
+						
+						//Chiamo il metodo inviamail che provvede all'invio della mail e all'aggiornamento del campo data di invio del DB
+						invioposta=inviamail(recordset,posta);
+						//Se l'invio della mail e l'aggiornamento è andato bene, incremento il contatore mail inviate.
+						if (invioposta) {
+							mailinviate++;
+						}
 
-								} else {
-									setErrore(ERRORE_INVIO_POSTA);
-									JOptionPane.showMessageDialog(null, "Errore 3 la posta non è partita");
-								}
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								setErrore(ERRORE_INVIO_POSTA);
-								JOptionPane.showMessageDialog(null, "Errore 3 la posta non è partita (try/catch)");
-								e.printStackTrace();
-							}
-							//Fine invio mail
-						}//Fine if (JOptionPane...
 					}//fine if (controllodati)
 				}//fine ciclo while
 				//L'istruzione connessioneDB.commit() serve per scrivere gli aggiornamenti sul database
@@ -372,5 +341,56 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		//System.out.println(risultato);
 		return risultato;
 
+	}
+	/**
+	 * Il metodo provvede all'invio della mail e all'aggiornamento del campo data invio mail nel DB
+	 * @param recordset: riceve il recordset dalla funzione chiamante
+	 * @param posta: riceve l'oggetto posta di tipo InviaMailTim (della mia libreria)
+	 * @return: ritorna TRUE se tutto è andato bene, altrimenti FALSE
+	 */
+	private boolean inviamail(ResultSet recordset,InviaMailTim posta) {
+		//Prima di inviare la mail apro la finestra di dialogo che chiede conferma invio mail
+		int risposta=JOptionPane.showConfirmDialog(FinestraComando, "Vuoi inviare la mail?", "Conferma invio mail",JOptionPane.OK_CANCEL_OPTION);
+		//La mail parte solo se si dà l'OK dalla finestra di dialogo																		
+		if (risposta== JOptionPane.OK_OPTION) {
+			//Inizio blocco invio  mail
+			try {
+				posta.Invia(destinatariotxt.getText(), destinatarioCCtxt.getText(), oggettotxt.getText(),
+						corpomailtxt.getText());
+				if (posta.getEsitoInvio() != 0) {
+					setErrore(TUTTO_OK);
+					//---------	JOptionPane.showMessageDialog(null, "Posta  Inviata");
+					//mailinviate++;	
+					try {
+						//Gestione Data: serve convertire la variabile tipo LocalDate in formato data java.sql.Date
+						//poichè il metodo updateDate richiede una data in formato java.sql
+						LocalDate todayLocalDate = LocalDate.now();
+						java.sql.Date sqlDate= java.sql.Date.valueOf(todayLocalDate);
+						//Fine gestione data
+						recordset.updateDate(DATA_INVIO_MAIL, sqlDate);
+						recordset.updateString(AZIONE, AGGIORNAMENTO_CAMPO_AZIONE);
+						recordset.updateRow();
+						JOptionPane.showMessageDialog(FinestraComando, "Data  aggiornata OK");
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(FinestraComando, "Data non aggiornata");
+						e.printStackTrace();
+					}
+				} else {
+					setErrore(ERRORE_INVIO_POSTA);
+					JOptionPane.showMessageDialog(null, "Errore 3 la posta non è partita");
+					return false;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				setErrore(ERRORE_INVIO_POSTA);
+				JOptionPane.showMessageDialog(null, "Errore 3 la posta non è partita (try/catch)");
+				e.printStackTrace();
+				return false;
+			}
+			//Fine invio mail
+			return true;
+		} //Fine if (JOptionPane...
+		return false;
 	}
 }
