@@ -34,8 +34,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	final int ERRORE_CONNESSIONE_DATABASE=2;
 	final int ERRORE_INVIO_POSTA=3;
 	final int ERRORE_SQL_TABELLA_PRINCIPALE=4;
-	final int errore_sql_tabella_Indirizzi=5;
-	final int errore_chiusura_tabella_destinatari=6;
+	final int ERRORE_SQL_TABELLA_INDIRIZZI=5;
+	final int ERRORE_CHIUSURA_TABELLA_DESTINATARI=6;
 	final int CENTRALE = 6;//colonna 6 della tabella Desaturazioni
 	final int DSLAM = 7;//colonna 7 della tabella Desaturazioni
 	final int SOLUZIONE = 11;//colonna 11 della tabella Desaturazioni
@@ -285,7 +285,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			setErrore(errore_sql_tabella_Indirizzi);
+			setErrore(ERRORE_SQL_TABELLA_INDIRIZZI);
 			JOptionPane.showMessageDialog(FinestraComando, "Errore SQL da CostruisciDestinatariMail() "+ getErrore());
 		}finally {
 			try {
@@ -294,7 +294,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				setErrore(errore_chiusura_tabella_destinatari);
+				setErrore(ERRORE_CHIUSURA_TABELLA_DESTINATARI);
 				JOptionPane.showMessageDialog(null, "Errore in chiusura da CostruisciDestinatariMail() " + getErrore());
 			}
 		}//Fine blocco Try/Cach/Finally
@@ -324,7 +324,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			setErrore(errore_sql_tabella_Indirizzi);
+			setErrore(ERRORE_SQL_TABELLA_INDIRIZZI);
 			JOptionPane.showMessageDialog(FinestraComando, "Errore SQL da CostruisciTestoMail() "+ getErrore());
 		}finally {
 			try {
@@ -333,7 +333,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				setErrore(errore_chiusura_tabella_destinatari);
+				setErrore(ERRORE_CHIUSURA_TABELLA_DESTINATARI);
 				JOptionPane.showMessageDialog(null, "Errore in chiusura da CostruisciTestoMail() " + getErrore());
 			}
 		}//Fine blocco Try/Cach/Finally
