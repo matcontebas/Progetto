@@ -102,6 +102,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 					//Fine controllo stringhe vuote
 					if (controllodati) {
 						contamaildainviare++;
+						/*
+//---------------------Inizio Blocco costruzione testo mail----------------------------------------						
 						if (avvio_o_simulazione) {
 							//Costruire la mail
 							destinatariotxt.setText(CostruisciDestinatariMail("DestinatarioA"));
@@ -180,7 +182,10 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 										recordset.getString(NLP)+".\n" + CostruisciTestoMail("WRTecnici") + " \n" + 
 										recordset.getString(WR)+ ".\n"+ testofinale +"\nSaluti \nMatteo Bassi");	
 						}
-						
+//-------------------------------Fine blocco costruzione testo mail------------------------------------------------						
+						 						*/
+						//ComponiMail compone il testo della mail e lo memorizza nei campi testo della finestra
+						ComponiMail(avvio_o_simulazione,recordset);
 						//Chiamo il metodo inviamail che provvede all'invio della mail e all'aggiornamento del campo data di invio del DB
 						invioposta=inviamail(recordset,posta);
 						//Se l'invio della mail e l'aggiornamento è andato bene, incremento il contatore mail inviate.
@@ -392,5 +397,94 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			return true;
 		} //Fine if (JOptionPane...
 		return false;
+	}
+	private void ComponiMail(boolean esegui_o_simula, ResultSet rs) {
+		/*Nel momento in cui ho fatto un metodo specializzato per gestire la composizione del testo, è stato necessario inserirlo in
+		un blocco try/catch per gestire le eccezioni sull'oggetto rs (result set) che rappresenta l'insieme dei record del database*/
+		try {
+			//---------------------Inizio Blocco costruzione testo mail----------------------------------------						
+		if (esegui_o_simula) {
+			//Costruire la mail
+			destinatariotxt.setText(CostruisciDestinatariMail("DestinatarioA"));
+			destinatarioCCtxt.setText(CostruisciDestinatariMail("DestinatarioCC"));
+			// Costruisco il destinatario per conoscenza a seconda dell'AOL
+			switch (rs.getString(AOL)) {
+			case "ABM":
+				destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("ABM"));
+				break;
+			case "LAZ":
+				destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("LAZ"));
+				break;
+			case "SAR":
+				destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("SAR"));
+				break;
+			case "ROM":
+				destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("ROM"));
+				break;
+			case "TOE":
+				destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("TOE"));
+				break;
+			case "TOO":
+				destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("TOO"));
+				break;
+			case "LIG":
+				destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("LIG"));
+				break;
+			case "LACP":
+				//inserire codice per LACP
+				JOptionPane.showMessageDialog(FinestraComando, "LACP");
+				break;
+			default:
+				//Serve per aggiungere eventuali altre AOL. L'evento non si verificherà mai
+				JOptionPane.showMessageDialog(null,
+						"AOL non identificata: " + rs.getString(AOL));
+			}
+		} else {
+			// modalità simulazione: la mail viene inviata a me
+			//memorizzo in temp il Mittente dalla tabella Destinatari_Mail
+			String temp=CostruisciDestinatariMail("Mittente");
+			//in modalità simulazione il destinatario della mail è solo il mittente
+			destinatariotxt.setText(temp);
+			destinatarioCCtxt.setText(temp);
+		}
+		//Fine destinatario per conoscenza
+		//Costruisco l'oggetto della mail------------------
+		oggettotxt.setText("Richiesta lavoro programmato "+ rs.getString(SOLUZIONE)+ " Centrale "+ 
+				rs.getString(CENTRALE)+ " "+ rs.getString(DSLAM)+ " TD "+ rs.getString(TD));
+		// Fine oggetto mail
+		//Costruisco il corpo della mail					
+		//Conversione formato data
+		ConversioneFormatoData convertidata=new ConversioneFormatoData();
+		String dataprogrammataconvertita= convertidata.converti(rs.getDate(DATA_PROGRAMMATA).toString(), "yyyy-MM-dd", " EEEE dd/MM/yyyy");
+		//Fine conversione formato data
+		//questo switch serve per variare il corpo della mail in funzione del valore del campo AOL
+		switch (rs.getString(AOL)) {
+		case "LACP":
+			corpomailtxt.setText("Si richiede l’Autorizzazione all’Esecuzione di Lavori Programmati inerenti l' "+ rs.getString(SOLUZIONE) + " Centrale "
+					+ rs.getString(CENTRALE)+" "+rs.getString(DSLAM)+ " TD "+ rs.getString(TD)+ " per "+
+					dataprogrammataconvertita+". \n" + "La richiesta è stata inserita nel portale LP con il numero "+
+					rs.getString(NLP)+".\n" + CostruisciTestoMail("WRSpecialisti") + " \n" + 
+					rs.getString(WR)+ ".\n"+ "Saluti \nMatteo Bassi");
+			break;
+			default:
+				//il caso default comprende tutti i casi in cui AOL è valorizzata da ABM fino a TOO
+				//Controllo se è il caso IPCOM o meno e definisco il testo finale del corpo della mail 
+				String testofinale="";
+				if (rs.getString(IPCOM).equals("Sì")) {
+					testofinale=CostruisciTestoMail("IPCOM_SI");
+				}else {
+					testofinale=CostruisciTestoMail("IPCOM_NO");
+				}
+				corpomailtxt.setText("Si richiede l’Autorizzazione all’Esecuzione di Lavori Programmati inerenti l' "+ rs.getString(SOLUZIONE) + " Centrale "
+						+ rs.getString(CENTRALE)+" "+rs.getString(DSLAM)+ " TD "+ rs.getString(TD)+ " per "+
+						dataprogrammataconvertita+". \n" + "La richiesta è stata inserita nel portale LP con il numero "+
+						rs.getString(NLP)+".\n" + CostruisciTestoMail("WRTecnici") + " \n" + 
+						rs.getString(WR)+ ".\n"+ testofinale +"\nSaluti \nMatteo Bassi");	
+		}
+//-------------------------------Fine blocco costruzione testo mail------------------------------------------------						
+		} catch (Exception e) {
+			// TODO: handle exception
+			JOptionPane.showMessageDialog(FinestraComando, "Errore generico nel metodo ComponiMail nell'oggetto PreparaDesaturazioni");
+		}						
 	}
 }
