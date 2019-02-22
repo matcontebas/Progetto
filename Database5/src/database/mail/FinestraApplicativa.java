@@ -16,6 +16,9 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.FlowLayout;
+import java.awt.Color;
+import java.awt.SystemColor;
 
 abstract class FinestraApplicativa {
 
@@ -30,6 +33,7 @@ abstract class FinestraApplicativa {
 	protected JButton btnEstraiDati;
 	protected JButton btnSimula;
 	protected FileDialogWindows trovafileAccess;
+	private JPanel panello_Bottoni;
 
 
 	/**
@@ -44,7 +48,8 @@ abstract class FinestraApplicativa {
 	 */
 	private void initialize() {
 		FinestraComando = new JFrame("Finestra di comando");
-		FinestraComando.setBounds(100, 100, 718, 713);
+		FinestraComando.getContentPane().setBackground(SystemColor.activeCaption);
+		FinestraComando.setBounds(500, 100, 718, 750);
 		FinestraComando.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		FinestraComando.getContentPane().setLayout(null);
 		
@@ -144,6 +149,29 @@ abstract class FinestraApplicativa {
 	    btnSimula.setBounds(488, 564, 122, 47);
 	    btnSimula.setVisible(false);
 	    FinestraComando.getContentPane().add(btnSimula);
+	    
+	    panello_Bottoni = new JPanel();
+	    panello_Bottoni.setBackground(Color.ORANGE);
+	    panello_Bottoni.setBounds(197, 635, 293, 35);
+	    FinestraComando.getContentPane().add(panello_Bottoni);
+	    
+	    JButton btnFirst = new JButton("First");
+	    btnFirst.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent arg0) {
+	    	}
+	    });
+	    panello_Bottoni.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+	    //panello_Bottoni.setVisible(false);
+	    
+	    JButton btnNext = new JButton("Next");
+	    panello_Bottoni.add(btnNext);
+	    
+	    JButton btnLast = new JButton("Last");
+	    panello_Bottoni.add(btnLast);
+	    
+	    JButton btnPrev = new JButton("Prev");
+	    panello_Bottoni.add(btnPrev);
+	    panello_Bottoni.add(btnFirst);
 	    FinestraComando.setVisible(true);
 	
 	    
