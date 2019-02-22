@@ -33,7 +33,7 @@ abstract class FinestraApplicativa {
 	protected JButton btnEstraiDati;
 	protected JButton btnSimula;
 	protected FileDialogWindows trovafileAccess;
-	private JPanel panello_Bottoni;
+	protected JPanel pannello_Bottoni;
 
 
 	/**
@@ -150,28 +150,28 @@ abstract class FinestraApplicativa {
 	    btnSimula.setVisible(false);
 	    FinestraComando.getContentPane().add(btnSimula);
 	    
-	    panello_Bottoni = new JPanel();
-	    panello_Bottoni.setBackground(Color.ORANGE);
-	    panello_Bottoni.setBounds(197, 635, 293, 35);
-	    FinestraComando.getContentPane().add(panello_Bottoni);
+	    pannello_Bottoni = new JPanel();
+	    pannello_Bottoni.setBackground(Color.ORANGE);
+	    pannello_Bottoni.setBounds(197, 635, 293, 35);
+	    FinestraComando.getContentPane().add(pannello_Bottoni);
 	    
 	    JButton btnFirst = new JButton("First");
 	    btnFirst.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
 	    	}
 	    });
-	    panello_Bottoni.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-	    //panello_Bottoni.setVisible(false);
+	    pannello_Bottoni.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+	    pannello_Bottoni.setVisible(false);
 	    
 	    JButton btnNext = new JButton("Next");
-	    panello_Bottoni.add(btnNext);
+	    pannello_Bottoni.add(btnNext);
 	    
 	    JButton btnLast = new JButton("Last");
-	    panello_Bottoni.add(btnLast);
+	    pannello_Bottoni.add(btnLast);
 	    
 	    JButton btnPrev = new JButton("Prev");
-	    panello_Bottoni.add(btnPrev);
-	    panello_Bottoni.add(btnFirst);
+	    pannello_Bottoni.add(btnPrev);
+	    pannello_Bottoni.add(btnFirst);
 	    FinestraComando.setVisible(true);
 	
 	    

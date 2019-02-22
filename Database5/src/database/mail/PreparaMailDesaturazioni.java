@@ -54,6 +54,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 */
 	public PreparaMailDesaturazioni() {
 		//Costruttore
+		pannello_Bottoni.setVisible(true);//istruzione temporanea
 		//eseguire connessione a Driver: la classe ConnessioneDriver è nella mia libreria DatabaseLib.jar
 		ConnessioneDriver driverconn=new  ConnessioneDriver();
 		driverconn.connettiDriver();
