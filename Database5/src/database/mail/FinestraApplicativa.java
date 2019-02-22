@@ -10,6 +10,7 @@ import javax.swing.border.TitledBorder;
 import RicercaFile.FileDialogWindows;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;
@@ -154,24 +155,40 @@ abstract class FinestraApplicativa {
 	    pannello_Bottoni.setBackground(Color.ORANGE);
 	    pannello_Bottoni.setBounds(197, 635, 293, 35);
 	    FinestraComando.getContentPane().add(pannello_Bottoni);
-	    
-	    JButton btnFirst = new JButton("First");
-	    btnFirst.addActionListener(new ActionListener() {
-	    	public void actionPerformed(ActionEvent arg0) {
-	    	}
-	    });
 	    pannello_Bottoni.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 	    pannello_Bottoni.setVisible(false);
 	    
 	    JButton btnNext = new JButton("Next");
-	    pannello_Bottoni.add(btnNext);
+	    btnNext.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent arg0) {
+	    		JOptionPane.showMessageDialog(FinestraComando, "Next");
+	    	}
+	    });
 	    
-	    JButton btnLast = new JButton("Last");
-	    pannello_Bottoni.add(btnLast);
+	    JButton btnFirst = new JButton("First");
+	    btnFirst.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent arg0) {
+	    		JOptionPane.showMessageDialog(FinestraComando, "First");
+	    	}
+	    });
 	    
 	    JButton btnPrev = new JButton("Prev");
-	    pannello_Bottoni.add(btnPrev);
+	    btnPrev.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent arg0) {
+	    		JOptionPane.showMessageDialog(FinestraComando, "Prev");
+	    	}
+	    });
+	    
+	    JButton btnLast = new JButton("Last");
+	    btnLast.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent arg0) {
+	    		JOptionPane.showMessageDialog(FinestraComando, "Last");
+	    	}
+	    });
 	    pannello_Bottoni.add(btnFirst);
+	    pannello_Bottoni.add(btnPrev);
+	    pannello_Bottoni.add(btnNext);
+	    pannello_Bottoni.add(btnLast);
 	    FinestraComando.setVisible(true);
 	
 	    
