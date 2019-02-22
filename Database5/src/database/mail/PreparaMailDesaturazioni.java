@@ -74,7 +74,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		//inizializzo i valori di default dei campi della finestra
 		usrtxt.setText(CostruisciDestinatariMail("UserMittente"));
 		mittentetxt.setText(CostruisciDestinatariMail("Mittente"));
-		if (getErrore()==0) {
+		if (getErrore()==TUTTO_OK) {
 			try {
 				int i=0;
 				int mailinviate=0;
