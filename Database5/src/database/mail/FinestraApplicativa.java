@@ -150,35 +150,35 @@ abstract class FinestraApplicativa {
 	    btnSimula.setBounds(488, 564, 122, 47);
 	    btnSimula.setVisible(false);
 	    FinestraComando.getContentPane().add(btnSimula);
-	    
+	    //Pannello per inserire i 4 bottoni
 	    pannello_Bottoni = new JPanel();
 	    pannello_Bottoni.setBackground(Color.ORANGE);
 	    pannello_Bottoni.setBounds(197, 635, 293, 35);
 	    FinestraComando.getContentPane().add(pannello_Bottoni);
 	    pannello_Bottoni.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 	    pannello_Bottoni.setVisible(false);
-	    
+	    //creazione btnNext
 	    JButton btnNext = new JButton("Next");
 	    btnNext.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
 	    		JOptionPane.showMessageDialog(FinestraComando, "Next");
 	    	}
 	    });
-	    
+	    //creazione btnFirst
 	    JButton btnFirst = new JButton("First");
 	    btnFirst.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
 	    		JOptionPane.showMessageDialog(FinestraComando, "First");
 	    	}
 	    });
-	    
+	    //creazione btnPrev
 	    JButton btnPrev = new JButton("Prev");
 	    btnPrev.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
 	    		JOptionPane.showMessageDialog(FinestraComando, "Prev");
 	    	}
 	    });
-	    
+	    //creazione btnLast
 	    JButton btnLast = new JButton("Last");
 	    btnLast.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
@@ -189,9 +189,7 @@ abstract class FinestraApplicativa {
 	    pannello_Bottoni.add(btnPrev);
 	    pannello_Bottoni.add(btnNext);
 	    pannello_Bottoni.add(btnLast);
-	    FinestraComando.setVisible(true);
-	
-	    
+	    FinestraComando.setVisible(true);    
 	}
 	abstract void EstraiDatidaFile(boolean avvio_o_simulazione);
 	abstract void CollegaFileAccess();
