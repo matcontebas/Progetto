@@ -1,11 +1,19 @@
 package database.mail;
 
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 import Database.ConnessioneDB;
 import Database.ConnessioneDriver;
 import Posta.InviaMailTim;
@@ -54,6 +62,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 */
 	public PreparaMailDesaturazioni() {
 		//Costruttore
+		initialize2();
 		//eseguire connessione a Driver: la classe ConnessioneDriver è nella mia libreria DatabaseLib.jar
 		ConnessioneDriver driverconn=new  ConnessioneDriver();
 		driverconn.connettiDriver();
@@ -138,7 +147,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 						connessioneDB.close();
 						btnEstraiDati.setVisible(false);
 						btnSimula.setVisible(false);
-						pannello_Bottoni.setVisible(false);
+						//pannello_Bottoni.setVisible(false);
 					}
 				} catch (SQLException sqlex) {
 					sqlex.printStackTrace();
@@ -182,6 +191,48 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	}
 	public void MoveLast() {
 		JOptionPane.showMessageDialog(FinestraComando, "Last");
+	}
+	private void initialize2() {
+	    //Pannello per inserire i 4 bottoni
+	    pannello_Bottoni = new JPanel();
+	    pannello_Bottoni.setBackground(Color.ORANGE);
+	    pannello_Bottoni.setBounds(197, 635, 293, 35);
+	    FinestraComando.getContentPane().add(pannello_Bottoni);
+	    pannello_Bottoni.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+	    pannello_Bottoni.setVisible(false);
+	    //creazione btnNext
+	    JButton btnNext = new JButton("Next");
+	    btnNext.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent arg0) {
+	    		MoveNext();
+	    	}
+	    });
+	    //creazione btnFirst
+	    JButton btnFirst = new JButton("First");
+	    btnFirst.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent arg0) {
+	    		MoveFirst();
+	    	}
+	    });
+	    //creazione btnPrev
+	    JButton btnPrev = new JButton("Prev");
+	    btnPrev.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent arg0) {
+	    		MovePrev();
+	    	}
+	    });
+	    //creazione btnLast
+	    JButton btnLast = new JButton("Last");
+	    btnLast.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent arg0) {
+	    		MoveLast();
+	    	}
+	    });
+	    pannello_Bottoni.add(btnFirst);
+	    pannello_Bottoni.add(btnPrev);
+	    pannello_Bottoni.add(btnNext);
+	    pannello_Bottoni.add(btnLast);
+
 	}
 	/**
 	 * @return the errore
