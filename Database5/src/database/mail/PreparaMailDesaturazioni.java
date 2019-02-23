@@ -54,7 +54,6 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 */
 	public PreparaMailDesaturazioni() {
 		//Costruttore
-		pannello_Bottoni.setVisible(true);//istruzione temporanea
 		//eseguire connessione a Driver: la classe ConnessioneDriver è nella mia libreria DatabaseLib.jar
 		ConnessioneDriver driverconn=new  ConnessioneDriver();
 		driverconn.connettiDriver();
@@ -94,6 +93,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				// Conteggio record
 				while (recordset.next()){
 					i+=1;
+					//Faccio apparire l'oggetto panel che contiene i bottoni per muoversi all'interno del recordset
+					pannello_Bottoni.setVisible(true);
 					//Controllo se il campo AOL è scritto correttamente
 					String Temp=recordset.getString(AOL);
 					boolean controlloAOL=(Temp.matches("ABM")|| Temp.matches("LAZ")|| Temp.matches("ROM")|| Temp.matches("SAR")|| Temp.matches("TOE")|| Temp.matches("TOO")|| Temp.matches("LIG")||Temp.matches("LACP"));
@@ -137,6 +138,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 						connessioneDB.close();
 						btnEstraiDati.setVisible(false);
 						btnSimula.setVisible(false);
+						pannello_Bottoni.setVisible(false);
 					}
 				} catch (SQLException sqlex) {
 					sqlex.printStackTrace();
