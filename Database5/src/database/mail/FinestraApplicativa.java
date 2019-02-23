@@ -10,7 +10,6 @@ import javax.swing.border.TitledBorder;
 import RicercaFile.FileDialogWindows;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;
@@ -161,28 +160,28 @@ abstract class FinestraApplicativa {
 	    JButton btnNext = new JButton("Next");
 	    btnNext.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
-	    		JOptionPane.showMessageDialog(FinestraComando, "Next");
+	    		MoveNext();
 	    	}
 	    });
 	    //creazione btnFirst
 	    JButton btnFirst = new JButton("First");
 	    btnFirst.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
-	    		JOptionPane.showMessageDialog(FinestraComando, "First");
+	    		MoveFirst();
 	    	}
 	    });
 	    //creazione btnPrev
 	    JButton btnPrev = new JButton("Prev");
 	    btnPrev.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
-	    		JOptionPane.showMessageDialog(FinestraComando, "Prev");
+	    		MovePrev();
 	    	}
 	    });
 	    //creazione btnLast
 	    JButton btnLast = new JButton("Last");
 	    btnLast.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
-	    		JOptionPane.showMessageDialog(FinestraComando, "Last");
+	    		MoveLast();
 	    	}
 	    });
 	    pannello_Bottoni.add(btnFirst);
@@ -193,4 +192,8 @@ abstract class FinestraApplicativa {
 	}
 	abstract void EstraiDatidaFile(boolean avvio_o_simulazione);
 	abstract void CollegaFileAccess();
+	abstract void MoveFirst();
+	abstract void MovePrev();
+	abstract void MoveNext();
+	abstract void MoveLast();
 }

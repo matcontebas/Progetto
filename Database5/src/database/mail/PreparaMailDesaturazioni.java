@@ -169,6 +169,18 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			JOptionPane.showMessageDialog(FinestraComando, "File NON selezionato");
 		}
 	}
+	public void MoveFirst() {
+		JOptionPane.showMessageDialog(FinestraComando, "First");
+	}
+	public void MovePrev() {
+		JOptionPane.showMessageDialog(FinestraComando, "Prev");
+	}
+	public void MoveNext() {
+		JOptionPane.showMessageDialog(FinestraComando, "Next");
+	}
+	public void MoveLast() {
+		JOptionPane.showMessageDialog(FinestraComando, "Last");
+	}
 	/**
 	 * @return the errore
 	 */
