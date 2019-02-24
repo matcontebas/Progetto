@@ -213,17 +213,61 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			JOptionPane.showMessageDialog(FinestraComando, "File NON selezionato");
 		}
 	}
-	public void MoveFirst() {
+	public void MoveFirst(ResultSet rs) {
 		JOptionPane.showMessageDialog(FinestraComando, "First");
+		try {
+			if (rs.first()) {
+				JOptionPane.showMessageDialog(FinestraComando, "First eseguito");
+				//inserire ComponiMail
+			} else {
+				JOptionPane.showMessageDialog(FinestraComando, "First non eseguito");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			JOptionPane.showMessageDialog(FinestraComando, "Errore metodoMoveFirst");
+		}
 	}
-	public void MovePrev() {
+	public void MovePrev(ResultSet rs) {
 		JOptionPane.showMessageDialog(FinestraComando, "Prev");
+		try {
+			if (rs.previous()) {
+				JOptionPane.showMessageDialog(FinestraComando, "Prev eseguito");
+				//inserire ComponiMail
+			} else {
+				JOptionPane.showMessageDialog(FinestraComando, "Prev non eseguito");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			JOptionPane.showMessageDialog(FinestraComando, "Errore metodoMovePrev");
+		}
 	}
-	public void MoveNext() {
+	public void MoveNext(ResultSet rs) {
 		JOptionPane.showMessageDialog(FinestraComando, "Next");
+		try {
+			if (rs.next()) {
+				JOptionPane.showMessageDialog(FinestraComando, "Next eseguito");
+				//inserire ComponiMail
+			} else {
+				JOptionPane.showMessageDialog(FinestraComando, "Next non eseguito");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			JOptionPane.showMessageDialog(FinestraComando, "Errore metodoMoveNext");
+		}
 	}
-	public void MoveLast() {
+	public void MoveLast(ResultSet rs) {
 		JOptionPane.showMessageDialog(FinestraComando, "Last");
+		try {
+			if (rs.last()) {
+				JOptionPane.showMessageDialog(FinestraComando, "Last eseguito");
+				//inserire ComponiMail
+			} else {
+				JOptionPane.showMessageDialog(FinestraComando, "Last non eseguito");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			JOptionPane.showMessageDialog(FinestraComando, "Errore metodoMoveLast");
+		}
 	}
 	private void initialize2() {
 	    //Pannello per inserire i 4 bottoni
@@ -237,28 +281,28 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	    JButton btnNext = new JButton("Next");
 	    btnNext.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
-	    		MoveNext();
+	    		MoveNext(getRecordset());
 	    	}
 	    });
 	    //creazione btnFirst
 	    JButton btnFirst = new JButton("First");
 	    btnFirst.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
-	    		MoveFirst();
+	    		MoveFirst(getRecordset());
 	    	}
 	    });
 	    //creazione btnPrev
 	    JButton btnPrev = new JButton("Prev");
 	    btnPrev.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
-	    		MovePrev();
+	    		MovePrev(getRecordset());
 	    	}
 	    });
 	    //creazione btnLast
 	    JButton btnLast = new JButton("Last");
 	    btnLast.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
-	    		MoveLast();
+	    		MoveLast(getRecordset());
 	    	}
 	    });
 	    pannello_Bottoni.add(btnFirst);
@@ -509,5 +553,11 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			// TODO: handle exception
 			JOptionPane.showMessageDialog(FinestraComando, "Errore generico nel metodo ComponiMail nell'oggetto PreparaDesaturazioni");
 		}						
+	}
+	public ResultSet getRecordset() {
+		return recordset;
+	}
+	public void setRecordset(ResultSet recordset) {
+		this.recordset = recordset;
 	}
 }
