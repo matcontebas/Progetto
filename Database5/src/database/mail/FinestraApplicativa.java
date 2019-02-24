@@ -16,8 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.FlowLayout;
-import java.awt.Color;
 import java.awt.SystemColor;
 
 abstract class FinestraApplicativa {
@@ -153,8 +151,4 @@ abstract class FinestraApplicativa {
 	}
 	abstract void EstraiDatidaFile(boolean avvio_o_simulazione);
 	abstract void CollegaFileAccess();
-	//abstract void MoveFirst();
-	//abstract void MovePrev();
-	//abstract void MoveNext();
-	//abstract void MoveLast();
 }
