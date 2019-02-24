@@ -75,6 +75,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				try {
 					if (connessioneDB != null) {
 						if (recordset != null) {
+							//L'istruzione connessioneDB.commit() serve per scrivere gli aggiornamenti sul database
+							connessioneDB.commit();
 							// cleanup resources, once after processing
 							recordset.close();
 						}
@@ -82,14 +84,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 							statement.close();
 						}
 						// and then finally close connection
-						/*la connessione non può essere chiusa in questo momento
-						 *altrimenti chiudendo l'oggetto connessioneDB non posso
-						 *più premere il bottone estrai dati. 
-						 */
 						connessioneDB.close();
-						//btnEstraiDati.setVisible(false);
-						//btnSimula.setVisible(false);
-						//pannello_Bottoni.setVisible(false);
 					}
 				} catch (SQLException sqlex) {
 					sqlex.printStackTrace();
@@ -163,16 +158,16 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 					}//fine if (controllodati)
 				}//fine ciclo while
 				//L'istruzione connessioneDB.commit() serve per scrivere gli aggiornamenti sul database
-				connessioneDB.commit();
+				//connessioneDB.commit();
 				JOptionPane.showMessageDialog(FinestraComando, "Numero di righe: "+ i+ " Numero di mail:" + contamaildainviare + "; "+ "Mail inviate: "+ mailinviate);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				setErrore(ERRORE_SQL_TABELLA_PRINCIPALE);
 				JOptionPane.showMessageDialog(FinestraComando, "Errore SQL Tabella principale" + getErrore());
-			} finally {
+			} /*finally {
 				// Step 3: Closing database connection
-				/*try {
+				try {
 					if (connessioneDB != null) {
 						// cleanup resources, once after processing
 						recordset.close();
@@ -190,8 +185,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				} catch (SQLException sqlex) {
 					sqlex.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Errore in chiusura");
-				}*/
-			} //Fine blocco finally
+				}
+			} *///Fine blocco finally
 		} else {
 			JOptionPane.showMessageDialog(FinestraComando, "Errore: "+getErrore()+" il pulsante non funzione");
 		}
