@@ -39,6 +39,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 */
 	private int errore;
 	private Connection connessioneDB=null;
+	private Statement statement=null;
+	private ResultSet recordset=null;
 	final int TUTTO_OK=0;
 	final int ERRORE_CONNESSIONE_DRIVER=1;
 	final int ERRORE_CONNESSIONE_DATABASE=2;
@@ -70,6 +72,30 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
 				JOptionPane.showMessageDialog(FinestraComando, "Finestra chiusa");
+				try {
+					if (connessioneDB != null) {
+						if (recordset != null) {
+							// cleanup resources, once after processing
+							recordset.close();
+						}
+						if (statement != null) {
+							statement.close();
+						}
+						// and then finally close connection
+						/*la connessione non può essere chiusa in questo momento
+						 *altrimenti chiudendo l'oggetto connessioneDB non posso
+						 *più premere il bottone estrai dati. 
+						 */
+						connessioneDB.close();
+						//btnEstraiDati.setVisible(false);
+						//btnSimula.setVisible(false);
+						//pannello_Bottoni.setVisible(false);
+					}
+				} catch (SQLException sqlex) {
+					sqlex.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Errore in chiusura Database event handler windowclosing");
+				}
+
 				FinestraComando.dispose();
 				System.exit(0);
 			}
@@ -91,8 +117,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		}
 	}
 	public void EstraiDatidaFile(boolean avvio_o_simulazione) {
-		Statement statement=null;
-		ResultSet recordset=null;
+
 		//inizializzo i valori di default dei campi della finestra
 		usrtxt.setText(CostruisciDestinatariMail("UserMittente"));
 		mittentetxt.setText(CostruisciDestinatariMail("Mittente"));
@@ -147,16 +172,16 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				JOptionPane.showMessageDialog(FinestraComando, "Errore SQL Tabella principale" + getErrore());
 			} finally {
 				// Step 3: Closing database connection
-				try {
+				/*try {
 					if (connessioneDB != null) {
 						// cleanup resources, once after processing
 						recordset.close();
 						statement.close();
 						// and then finally close connection
-						/*la connessione non può essere chiusa in questo momento
-						 *altrimenti chiudendo l'oggetto connessioneDB non posso
-						 *più premere il bottone estrai dati. 
-						 */
+						//la connessione non può essere chiusa in questo momento
+						//altrimenti chiudendo l'oggetto connessioneDB non posso
+						 //più premere il bottone estrai dati. 
+						 
 						connessioneDB.close();
 						btnEstraiDati.setVisible(false);
 						btnSimula.setVisible(false);
@@ -165,7 +190,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				} catch (SQLException sqlex) {
 					sqlex.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Errore in chiusura");
-				}
+				}*/
 			} //Fine blocco finally
 		} else {
 			JOptionPane.showMessageDialog(FinestraComando, "Errore: "+getErrore()+" il pulsante non funzione");
