@@ -13,7 +13,6 @@ import java.sql.Statement;
 import java.time.LocalDate;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -65,6 +64,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 */
 	public PreparaMailDesaturazioni() {
 		//Costruttore
+		//Inserisco l'event handler windowclosing per gestire la chiusura delle connessioni in uscita
 		//FinestraComando.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		FinestraComando.addWindowListener(new WindowAdapter() {
 			@Override
@@ -74,7 +74,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				System.exit(0);
 			}
 		});
-
+		//Fine event handler
 		initialize2();
 		//eseguire connessione a Driver: la classe ConnessioneDriver è nella mia libreria DatabaseLib.jar
 		ConnessioneDriver driverconn=new  ConnessioneDriver();
@@ -166,7 +166,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 					sqlex.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Errore in chiusura");
 				}
-			}
+			} //Fine blocco finally
 		} else {
 			JOptionPane.showMessageDialog(FinestraComando, "Errore: "+getErrore()+" il pulsante non funzione");
 		}
