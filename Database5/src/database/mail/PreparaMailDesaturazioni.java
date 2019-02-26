@@ -38,6 +38,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 * 5: errore chiusura tabella destinatari
 	 */
 	private int errore;
+	private boolean esegui_o_simula; //simulazione true significa modalità normale false simulazione
 	private Connection connessioneDB=null;
 	private Statement statement=null;
 	private ResultSet recordset=null;
@@ -116,6 +117,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		//inizializzo i valori di default dei campi della finestra
 		usrtxt.setText(CostruisciDestinatariMail("UserMittente"));
 		mittentetxt.setText(CostruisciDestinatariMail("Mittente"));
+		//imposta la variabile privata esegui_o_simula al valore di avvio_o_simulazione
+		setEsegui_o_simula(avvio_o_simulazione);
 		if (getErrore()==TUTTO_OK) {
 			try {
 				int i=0;
@@ -214,11 +217,12 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		}
 	}
 	public void MoveFirst(ResultSet rs) {
-		JOptionPane.showMessageDialog(FinestraComando, "First");
+		//JOptionPane.showMessageDialog(FinestraComando, "First");
 		try {
 			if (rs.first()) {
-				JOptionPane.showMessageDialog(FinestraComando, "First eseguito");
+				//JOptionPane.showMessageDialog(FinestraComando, "First eseguito");
 				//inserire ComponiMail
+				ComponiMail(isEsegui_o_simula(),rs);
 			} else {
 				JOptionPane.showMessageDialog(FinestraComando, "First non eseguito");
 			}
@@ -228,11 +232,12 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		}
 	}
 	public void MovePrev(ResultSet rs) {
-		JOptionPane.showMessageDialog(FinestraComando, "Prev");
+		//JOptionPane.showMessageDialog(FinestraComando, "Prev");
 		try {
 			if (rs.previous()) {
-				JOptionPane.showMessageDialog(FinestraComando, "Prev eseguito");
+				//JOptionPane.showMessageDialog(FinestraComando, "Prev eseguito");
 				//inserire ComponiMail
+				ComponiMail(isEsegui_o_simula(),rs);
 			} else {
 				JOptionPane.showMessageDialog(FinestraComando, "Prev non eseguito");
 			}
@@ -242,11 +247,12 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		}
 	}
 	public void MoveNext(ResultSet rs) {
-		JOptionPane.showMessageDialog(FinestraComando, "Next");
+		//JOptionPane.showMessageDialog(FinestraComando, "Next");
 		try {
 			if (rs.next()) {
-				JOptionPane.showMessageDialog(FinestraComando, "Next eseguito");
+				//JOptionPane.showMessageDialog(FinestraComando, "Next eseguito");
 				//inserire ComponiMail
+				ComponiMail(isEsegui_o_simula(),rs);
 			} else {
 				JOptionPane.showMessageDialog(FinestraComando, "Next non eseguito");
 			}
@@ -256,11 +262,12 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		}
 	}
 	public void MoveLast(ResultSet rs) {
-		JOptionPane.showMessageDialog(FinestraComando, "Last");
+		//JOptionPane.showMessageDialog(FinestraComando, "Last");
 		try {
 			if (rs.last()) {
-				JOptionPane.showMessageDialog(FinestraComando, "Last eseguito");
+				//JOptionPane.showMessageDialog(FinestraComando, "Last eseguito");
 				//inserire ComponiMail
+				ComponiMail(isEsegui_o_simula(),rs);
 			} else {
 				JOptionPane.showMessageDialog(FinestraComando, "Last non eseguito");
 			}
@@ -499,7 +506,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				break;
 			case "LACP":
 				//inserire codice per LACP
-				JOptionPane.showMessageDialog(FinestraComando, "LACP");
+				//JOptionPane.showMessageDialog(FinestraComando, "LACP");
 				break;
 			default:
 				//Serve per aggiungere eventuali altre AOL. L'evento non si verificherà mai
@@ -559,5 +566,11 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	}
 	public void setRecordset(ResultSet recordset) {
 		this.recordset = recordset;
+	}
+	private boolean isEsegui_o_simula() {
+		return esegui_o_simula;
+	}
+	private void setEsegui_o_simula(boolean esegui_o_simula) {
+		this.esegui_o_simula = esegui_o_simula;
 	}
 }
