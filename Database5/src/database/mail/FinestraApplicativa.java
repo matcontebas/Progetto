@@ -30,6 +30,7 @@ abstract class FinestraApplicativa {
 	private JPanel panel;
 	protected JButton btnEstraiDati;
 	protected JButton btnSimula;
+	protected JButton btnRicercaFile;
 	protected FileDialogWindows trovafileAccess;
 	protected JPanel pannello_Bottoni;
 
@@ -127,7 +128,7 @@ abstract class FinestraApplicativa {
 	    btnEstraiDati.setBounds(68, 564, 122, 47);
 	    FinestraComando.getContentPane().add(btnEstraiDati);
 	    
-	    JButton btnRicercaFile = new JButton("Ricerca File");
+	    btnRicercaFile = new JButton("Ricerca File");
 	    btnRicercaFile.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		CollegaFileAccess();

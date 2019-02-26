@@ -140,6 +140,9 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 					i+=1;
 					//Faccio apparire l'oggetto panel che contiene i bottoni per muoversi all'interno del recordset
 					pannello_Bottoni.setVisible(true);
+					btnEstraiDati.setVisible(false);
+					btnSimula.setVisible(false);
+					btnRicercaFile.setVisible(false);
 					//Controllo se il campo AOL è scritto correttamente
 					String Temp=recordset.getString(AOL);
 					boolean controlloAOL=(Temp.matches("ABM")|| Temp.matches("LAZ")|| Temp.matches("ROM")|| Temp.matches("SAR")|| Temp.matches("TOE")|| Temp.matches("TOO")|| Temp.matches("LIG")||Temp.matches("LACP"));
@@ -223,9 +226,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				//JOptionPane.showMessageDialog(FinestraComando, "First eseguito");
 				//inserire ComponiMail
 				ComponiMail(isEsegui_o_simula(),rs);
-			} else {
-				JOptionPane.showMessageDialog(FinestraComando, "First non eseguito");
-			}
+			} 
 		} catch (Exception e) {
 			// TODO: handle exception
 			JOptionPane.showMessageDialog(FinestraComando, "Errore metodoMoveFirst");
@@ -236,10 +237,11 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		try {
 			if (rs.previous()) {
 				//JOptionPane.showMessageDialog(FinestraComando, "Prev eseguito");
-				//inserire ComponiMail
-				ComponiMail(isEsegui_o_simula(),rs);
+				ComponiMail(isEsegui_o_simula(),rs);			
 			} else {
-				JOptionPane.showMessageDialog(FinestraComando, "Prev non eseguito");
+				//la seguente istruzione serve per riportare il cursore sul record corretto quando
+				//premo MovePrev troppe volte
+				rs.next();
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -251,10 +253,11 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		try {
 			if (rs.next()) {
 				//JOptionPane.showMessageDialog(FinestraComando, "Next eseguito");
-				//inserire ComponiMail
 				ComponiMail(isEsegui_o_simula(),rs);
 			} else {
-				JOptionPane.showMessageDialog(FinestraComando, "Next non eseguito");
+				//la seguente istruzione serve per riportare il cursore sul record corretto quando
+				//premo MoveNext troppe volte
+				rs.previous();
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -266,11 +269,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		try {
 			if (rs.last()) {
 				//JOptionPane.showMessageDialog(FinestraComando, "Last eseguito");
-				//inserire ComponiMail
 				ComponiMail(isEsegui_o_simula(),rs);
-			} else {
-				JOptionPane.showMessageDialog(FinestraComando, "Last non eseguito");
-			}
+			} 
 		} catch (Exception e) {
 			// TODO: handle exception
 			JOptionPane.showMessageDialog(FinestraComando, "Errore metodoMoveLast");
