@@ -113,7 +113,6 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		}
 	}
 	public void EstraiDatidaFile(boolean avvio_o_simulazione) {
-
 		//inizializzo i valori di default dei campi della finestra
 		usrtxt.setText(CostruisciDestinatariMail("UserMittente"));
 		mittentetxt.setText(CostruisciDestinatariMail("Mittente"));
@@ -124,8 +123,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				int i=0;
 				int mailinviate=0;
 				int contamaildainviare=0;
-				boolean invioposta;
-				InviaMailTim posta = new InviaMailTim(mittentetxt.getText(),usrtxt.getText(),"");
+				//boolean invioposta;
+				//InviaMailTim posta = new InviaMailTim(mittentetxt.getText(),usrtxt.getText(),"");
 				/*istruzione setAutoCommit necessaria per rendere aggiornabile ogni record del recordset
 				senza tale istruzione viene aggiornato solamente il primo record del recorset*/
 				connessioneDB.setAutoCommit(false);
@@ -143,6 +142,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 					btnEstraiDati.setVisible(false);
 					btnSimula.setVisible(false);
 					btnRicercaFile.setVisible(false);
+					/*
 					//Controllo se il campo AOL è scritto correttamente
 					String Temp=recordset.getString(AOL);
 					boolean controlloAOL=(Temp.matches("ABM")|| Temp.matches("LAZ")|| Temp.matches("ROM")|| Temp.matches("SAR")|| Temp.matches("TOE")|| Temp.matches("TOO")|| Temp.matches("LIG")||Temp.matches("LACP"));
@@ -162,6 +162,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 						}
 
 					}//fine if (controllodati)
+					*/
 				}//fine ciclo while
 				//L'istruzione connessioneDB.commit() serve per scrivere gli aggiornamenti sul database
 				//connessioneDB.commit();
@@ -280,7 +281,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	    //Pannello per inserire i 4 bottoni
 	    pannello_Bottoni = new JPanel();
 	    pannello_Bottoni.setBackground(Color.ORANGE);
-	    pannello_Bottoni.setBounds(197, 635, 293, 35);
+	    pannello_Bottoni.setBounds(184, 635, 350, 35);
 	    FinestraComando.getContentPane().add(pannello_Bottoni);
 	    pannello_Bottoni.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 	    pannello_Bottoni.setVisible(false);
@@ -312,11 +313,48 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	    		MoveLast(getRecordset());
 	    	}
 	    });
+	    //creazione btnMail
+	    JButton btnMail = new JButton("Mail");
+	    btnMail.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent arg0) {
+	    		boolean invioposta;
+				boolean controllodati;
+				InviaMailTim posta = new InviaMailTim(mittentetxt.getText(),usrtxt.getText(),"");		
+				try {
+					//Controllo se il campo AOL è scritto correttamente
+					String Temp=recordset.getString(AOL);
+					boolean controlloAOL=(Temp.matches("ABM")|| Temp.matches("LAZ")|| Temp.matches("ROM")|| Temp.matches("SAR")|| Temp.matches("TOE")|| Temp.matches("TOO")|| Temp.matches("LIG")||Temp.matches("LACP"));
+					//Fine controllo campo AOL
+					//Controllo se non ci sono stringhe vuote
+					controllodati = controlloAOL && (recordset.getString(NLP)!="")&&(recordset.getString(TD)!="");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					//Se qualcosa va male, non devo inviare mail quindi imposto controllodati a falso
+					controllodati=false;
+					JOptionPane.showMessageDialog(FinestraComando, "Errore lettura recordset btnMail");
+					e.printStackTrace();
+				}
+				//Fine controllo stringhe vuote
+				if (controllodati) {
+					//contamaildainviare++;
+					//ComponiMail compone il testo della mail e lo memorizza nei campi testo della finestra
+					//ComponiMail(avvio_o_simulazione,recordset);
+					//Chiamo il metodo inviamail che provvede all'invio della mail e all'aggiornamento del campo data di invio del DB
+					invioposta=inviamail(recordset,posta);
+					//Se l'invio della mail e l'aggiornamento è andato bene, incremento il contatore mail inviate.
+					if (invioposta) {
+						//mailinviate++;
+					}
+
+				}//fine if (controllodati)
+	    	}
+	    });
+	    
 	    pannello_Bottoni.add(btnFirst);
 	    pannello_Bottoni.add(btnPrev);
 	    pannello_Bottoni.add(btnNext);
 	    pannello_Bottoni.add(btnLast);
-
+	    pannello_Bottoni.add(btnMail);
 	}
 	/**
 	 * @return the errore
