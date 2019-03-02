@@ -49,6 +49,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	final int ERRORE_SQL_TABELLA_PRINCIPALE=4;
 	final int ERRORE_SQL_TABELLA_INDIRIZZI=5;
 	final int ERRORE_CHIUSURA_TABELLA_DESTINATARI=6;
+	final int ERRORE_CONNESSIONEDB_NON_ATTIVA=7; // se connessioneDB è null o chiusa esce questo codice di errore
 	final int CENTRALE = 6;//colonna 6 della tabella Desaturazioni
 	final int DSLAM = 7;//colonna 7 della tabella Desaturazioni
 	final int SOLUZIONE = 11;//colonna 11 della tabella Desaturazioni
@@ -67,7 +68,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 */
 	public PreparaMailDesaturazioni() {
 		//Costruttore
-		//Inserisco l'event handler windowclosing per gestire la chiusura delle connessioni in uscita
+		//Inserisco l'event handler windowclosing per gestire il salvataggio dei dati e la chiusura delle connessioni in uscita
 		//FinestraComando.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		FinestraComando.addWindowListener(new WindowAdapter() {
 			@Override
@@ -118,6 +119,10 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		mittentetxt.setText(CostruisciDestinatariMail("Mittente"));
 		//imposta la variabile privata esegui_o_simula al valore di avvio_o_simulazione
 		setEsegui_o_simula(avvio_o_simulazione);
+		//controllo se connessioneDB è attiva altrimenti errore
+		if(connessioneDB==null) {
+			setErrore(ERRORE_CONNESSIONEDB_NON_ATTIVA);
+		}
 		if (getErrore()==TUTTO_OK) {
 			try {
 				int i=0;
@@ -146,6 +151,17 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 					btnRicercaFile.setVisible(false);
 					//Posiziono il cursore sul primo record del recordset
 					MoveFirst(recordset);
+				} else {
+					/*Se non ci sono record, chiudo recordset, statement e connessioneDB per rilasciare la connessione al DB
+					e li riinizializzo a null per consentire la corretta gestione da parte dell'event handler in fase di chiusura della
+					 finestra e per consentire di riutilizzare il pulsante RicercaFile per consentire di scegliere un altro
+					 database access senza chiudere e riaprire la finestra.*/
+					recordset.close();
+					recordset=null;
+					statement.close();
+					statement=null;
+					connessioneDB.close();
+					connessioneDB=null;
 				}
 				JOptionPane.showMessageDialog(FinestraComando, "Numero di righe: "+ i+ " Numero di mail:" + contamaildainviare + "; "+ "Mail inviate: "+ mailinviate);
 			} catch (SQLException e) {
@@ -155,7 +171,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				JOptionPane.showMessageDialog(FinestraComando, "Errore SQL Tabella principale" + getErrore());
 			}
 		} else {
-			JOptionPane.showMessageDialog(FinestraComando, "Errore: "+getErrore()+" il pulsante non funzione");
+			JOptionPane.showMessageDialog(FinestraComando, "Errore: "+getErrore()+" il pulsante non funziona la connessione al DB è chiusa");
 		}
 	} //Fine estrai dati
 	public void CollegaFileAccess() {
@@ -342,17 +358,20 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		String risultato="";
 		//int i=0;
 		try {
-			//questo statement apre di default il recordset scrollabile solo in avanti ed in sola lettura
-			statement=connessioneDB.createStatement();
-			recordset = statement.executeQuery("SELECT * FROM Destinatari_Mail WHERE Destinatari_Mail.Destinatari = '"+ tipologia + "'");		
-			while (recordset.next()){
-				//i+=1;
-				if (recordset.isLast()) {
-					risultato = risultato + recordset.getString("Mail");
-				} else {
-					risultato = risultato +  recordset.getString("Mail") + ", ";
-				}
-			}//Fine ciclo While
+			if (connessioneDB!=null) {
+				//questo statement apre di default il recordset scrollabile solo in avanti ed in sola lettura
+				statement = connessioneDB.createStatement();
+				recordset = statement.executeQuery(
+						"SELECT * FROM Destinatari_Mail WHERE Destinatari_Mail.Destinatari = '" + tipologia + "'");
+				while (recordset.next()) {
+					//i+=1;
+					if (recordset.isLast()) {
+						risultato = risultato + recordset.getString("Mail");
+					} else {
+						risultato = risultato + recordset.getString("Mail") + ", ";
+					}
+				} //Fine ciclo While
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -360,8 +379,12 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			JOptionPane.showMessageDialog(FinestraComando, "Errore SQL da CostruisciDestinatariMail() "+ getErrore());
 		}finally {
 			try {
-				recordset.close();
-				statement.close();
+				if (recordset!= null) {
+					recordset.close();
+				}
+				if (statement!=null) {
+					statement.close();
+				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
