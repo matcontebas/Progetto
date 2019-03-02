@@ -137,63 +137,23 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				// Conteggio record
 				while (recordset.next()){
 					i+=1;
-					//Faccio apparire l'oggetto panel che contiene i bottoni per muoversi all'interno del recordset
+				}//fine ciclo while
+				if (i>0) {
+					//Se ci sono record (i>0) faccio apparire l'oggetto panel che contiene i bottoni per muoversi all'interno del recordset
 					pannello_Bottoni.setVisible(true);
 					btnEstraiDati.setVisible(false);
 					btnSimula.setVisible(false);
 					btnRicercaFile.setVisible(false);
-					/*
-					//Controllo se il campo AOL è scritto correttamente
-					String Temp=recordset.getString(AOL);
-					boolean controlloAOL=(Temp.matches("ABM")|| Temp.matches("LAZ")|| Temp.matches("ROM")|| Temp.matches("SAR")|| Temp.matches("TOE")|| Temp.matches("TOO")|| Temp.matches("LIG")||Temp.matches("LACP"));
-					//Fine controllo campo AOL
-					//Controllo se non ci sono stringhe vuote
-					boolean controllodati=controlloAOL && (recordset.getString(NLP)!="")&&(recordset.getString(TD)!="");
-					//Fine controllo stringhe vuote
-					if (controllodati) {
-						contamaildainviare++;
-						//ComponiMail compone il testo della mail e lo memorizza nei campi testo della finestra
-						ComponiMail(avvio_o_simulazione,recordset);
-						//Chiamo il metodo inviamail che provvede all'invio della mail e all'aggiornamento del campo data di invio del DB
-						invioposta=inviamail(recordset,posta);
-						//Se l'invio della mail e l'aggiornamento è andato bene, incremento il contatore mail inviate.
-						if (invioposta) {
-							mailinviate++;
-						}
-
-					}//fine if (controllodati)
-					*/
-				}//fine ciclo while
-				//L'istruzione connessioneDB.commit() serve per scrivere gli aggiornamenti sul database
-				//connessioneDB.commit();
+					//Posiziono il cursore sul primo record del recordset
+					MoveFirst(recordset);
+				}
 				JOptionPane.showMessageDialog(FinestraComando, "Numero di righe: "+ i+ " Numero di mail:" + contamaildainviare + "; "+ "Mail inviate: "+ mailinviate);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				setErrore(ERRORE_SQL_TABELLA_PRINCIPALE);
 				JOptionPane.showMessageDialog(FinestraComando, "Errore SQL Tabella principale" + getErrore());
-			} /*finally {
-				// Step 3: Closing database connection
-				try {
-					if (connessioneDB != null) {
-						// cleanup resources, once after processing
-						recordset.close();
-						statement.close();
-						// and then finally close connection
-						//la connessione non può essere chiusa in questo momento
-						//altrimenti chiudendo l'oggetto connessioneDB non posso
-						 //più premere il bottone estrai dati. 
-						 
-						connessioneDB.close();
-						btnEstraiDati.setVisible(false);
-						btnSimula.setVisible(false);
-						//pannello_Bottoni.setVisible(false);
-					}
-				} catch (SQLException sqlex) {
-					sqlex.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Errore in chiusura");
-				}
-			} *///Fine blocco finally
+			}
 		} else {
 			JOptionPane.showMessageDialog(FinestraComando, "Errore: "+getErrore()+" il pulsante non funzione");
 		}
