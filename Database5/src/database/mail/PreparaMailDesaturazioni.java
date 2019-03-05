@@ -39,6 +39,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 */
 	private int errore;
 	private boolean esegui_o_simula; //simulazione true significa modalità normale false simulazione
+	private int contarecord=0;
+	private int mailinviate=0;
 	private Connection connessioneDB=null;
 	private Statement statement=null;
 	private ResultSet recordset=null;
@@ -74,6 +76,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
 				JOptionPane.showMessageDialog(FinestraComando, "Finestra chiusa");
+				JOptionPane.showMessageDialog(FinestraComando, "mail inviate: "+ mailinviate);
 				try {
 					if (connessioneDB != null) {
 						if (recordset != null) {
@@ -125,9 +128,6 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		}
 		if (getErrore()==TUTTO_OK) {
 			try {
-				int i=0;
-				int mailinviate=0;
-				int contamaildainviare=0;
 				//boolean invioposta;
 				//InviaMailTim posta = new InviaMailTim(mittentetxt.getText(),usrtxt.getText(),"");
 				/*istruzione setAutoCommit necessaria per rendere aggiornabile ogni record del recordset
@@ -141,9 +141,9 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				recordset = statement.executeQuery("SELECT * FROM Desaturazioni_Locale WHERE DataInvioMail is Null AND TD is Not Null AND [N# LP] is Not Null AND WR is Not Null AND [IP NW]is Not Null AND [Data programmata] is Not Null");
 				// Conteggio record
 				while (recordset.next()){
-					i+=1;
+					contarecord+=1;
 				}//fine ciclo while
-				if (i>0) {
+				if (contarecord>0) {
 					//Se ci sono record (i>0) faccio apparire l'oggetto panel che contiene i bottoni per muoversi all'interno del recordset
 					pannello_Bottoni.setVisible(true);
 					btnEstraiDati.setVisible(false);
@@ -163,7 +163,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 					connessioneDB.close();
 					connessioneDB=null;
 				}
-				JOptionPane.showMessageDialog(FinestraComando, "Numero di righe: "+ i+ " Numero di mail:" + contamaildainviare + "; "+ "Mail inviate: "+ mailinviate);
+				JOptionPane.showMessageDialog(FinestraComando, "Numero di record: "+ contarecord);
+				//JOptionPane.showMessageDialog(FinestraComando, "Numero di righe: "+ i+ " Numero di mail:" + contamaildainviare + "; "+ "Mail inviate: "+ mailinviate);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -319,7 +320,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 					invioposta=inviamail(recordset,posta);
 					//Se l'invio della mail e l'aggiornamento è andato bene, incremento il contatore mail inviate.
 					if (invioposta) {
-						//mailinviate++;
+						mailinviate++;
 					}
 
 				}//fine if (controllodati)
