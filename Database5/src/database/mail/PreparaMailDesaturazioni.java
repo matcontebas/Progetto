@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import Database.ConnessioneDB;
 import Database.ConnessioneDriver;
@@ -45,6 +46,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	private Connection connessioneDB=null;
 	private Statement statement=null;
 	private ResultSet recordset=null;
+	private JTextField casellatxtNumerorecord; //definisco la casella di testo che conterrà il numero del record
 	final int TUTTO_OK=0;
 	final int ERRORE_CONNESSIONE_DRIVER=1;
 	final int ERRORE_CONNESSIONE_DATABASE=2;
@@ -207,6 +209,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				ComponiMail(isEsegui_o_simula(),rs);
 				//imposto il ountatore ad uno sul primo record
 				puntatorerecordcorrente=1;
+				casellatxtNumerorecord.setText(puntatorerecordcorrente + "/" + contarecord);
 			} 
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -217,12 +220,12 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		//JOptionPane.showMessageDialog(FinestraComando, "Prev");
 		try {
 			if (rs.previous()) {
-				//JOptionPane.showMessageDialog(FinestraComando, "Prev eseguito");
 				ComponiMail(isEsegui_o_simula(),rs);
 				//decremento il puntatore controllando che non siamo già al primo record.
 				if (puntatorerecordcorrente>1) {
 					--puntatorerecordcorrente;
-					JOptionPane.showMessageDialog(FinestraComando, "Numero record: "+puntatorerecordcorrente);
+					//JOptionPane.showMessageDialog(FinestraComando, "Numero record: "+puntatorerecordcorrente);
+					casellatxtNumerorecord.setText(puntatorerecordcorrente + "/" + contarecord);
 				}
 			} else {
 				//la seguente istruzione serve per riportare il cursore sul record corretto quando
@@ -235,7 +238,6 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		}
 	}
 	public void MoveNext(ResultSet rs) {
-		//JOptionPane.showMessageDialog(FinestraComando, "Next");
 		try {
 			if (rs.next()) {
 				//JOptionPane.showMessageDialog(FinestraComando, "Next eseguito");
@@ -243,7 +245,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				//incremento il puntatore controllando che non siamo già all'ultimo record
 				if (puntatorerecordcorrente<contarecord) {
 					++puntatorerecordcorrente;
-					JOptionPane.showMessageDialog(FinestraComando, "Numero record: "+ puntatorerecordcorrente);
+					//JOptionPane.showMessageDialog(FinestraComando, "Numero record: "+ puntatorerecordcorrente);
+					casellatxtNumerorecord.setText(puntatorerecordcorrente + "/" + contarecord);
 				}
 			} else {
 				//la seguente istruzione serve per riportare il cursore sul record corretto quando
@@ -263,6 +266,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				ComponiMail(isEsegui_o_simula(),rs);
 				//imposto il puntatore sull'ultimo record
 				puntatorerecordcorrente=contarecord;
+				casellatxtNumerorecord.setText(puntatorerecordcorrente + "/" + contarecord);
 			} 
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -273,7 +277,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	    //Pannello per inserire i 4 bottoni
 	    pannello_Bottoni = new JPanel();
 	    pannello_Bottoni.setBackground(Color.ORANGE);
-	    pannello_Bottoni.setBounds(184, 635, 350, 35);
+	    pannello_Bottoni.setBounds(159, 635, 400, 35);
 	    FinestraComando.getContentPane().add(pannello_Bottoni);
 	    pannello_Bottoni.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 	    pannello_Bottoni.setVisible(false);
@@ -341,9 +345,15 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				}//fine if (controllodati)
 	    	}
 	    });
-	    
+	    //costruisco la casella di testo che conterrà il numero del record
+	    casellatxtNumerorecord = new JTextField();
+	    casellatxtNumerorecord.setColumns(4);
+	    casellatxtNumerorecord.setEditable(false);
+	    //casellatxtNumerorecord.setEnabled(false);
+	    //aggiungo tutti gli elementi al pannello
 	    pannello_Bottoni.add(btnFirst);
 	    pannello_Bottoni.add(btnPrev);
+	    pannello_Bottoni.add(casellatxtNumerorecord);
 	    pannello_Bottoni.add(btnNext);
 	    pannello_Bottoni.add(btnLast);
 	    pannello_Bottoni.add(btnMail);
