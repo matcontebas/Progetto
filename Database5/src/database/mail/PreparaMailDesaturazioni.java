@@ -343,7 +343,9 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 						mailinviate++;
 					}
 
-				}//fine if (controllodati)
+				} else {
+					JOptionPane.showMessageDialog(FinestraComando, "Controllo dei dati negativo. Controllare nel DB e riprovare");
+				}
 	    	}
 	    });
 	    //costruisco la casella di testo che conterrà il numero del record
