@@ -16,7 +16,6 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import Database.ConnessioneDB;
 import Database.ConnessioneDriver;
 import Posta.InviaMailTim;
@@ -43,6 +42,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	private int contarecord=0; //totale dei record del recordset
 	private int puntatorerecordcorrente=0; //puntatore al record corrente
 	private int mailinviate=0;//contatore mail inviate
+	private InviaMailTim posta;
 	private Connection connessioneDB=null;
 	private Statement statement=null;
 	private ResultSet recordset=null;
@@ -147,6 +147,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 					++contarecord;
 				}//fine ciclo while
 				if (contarecord>0) {
+					posta = new InviaMailTim(mittentetxt.getText(),usrtxt.getText(),"");
 					//Se ci sono record (i>0) faccio apparire l'oggetto panel che contiene i bottoni per muoversi all'interno del recordset
 					pannello_Bottoni.setVisible(true);
 					btnEstraiDati.setVisible(false);
@@ -315,7 +316,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	    	public void actionPerformed(ActionEvent arg0) {
 	    		boolean invioposta;
 				boolean controllodati;
-				InviaMailTim posta = new InviaMailTim(mittentetxt.getText(),usrtxt.getText(),"");		
+				//posta = new InviaMailTim(mittentetxt.getText(),usrtxt.getText(),"");		
 				try {
 					//Controllo se il campo AOL è scritto correttamente
 					String Temp=recordset.getString(AOL);
@@ -348,8 +349,9 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	    //costruisco la casella di testo che conterrà il numero del record
 	    casellatxtNumerorecord = new JTextField();
 	    casellatxtNumerorecord.setColumns(4);
-	    casellatxtNumerorecord.setEditable(false);
-	    //casellatxtNumerorecord.setEnabled(false);
+	    casellatxtNumerorecord.setForeground(Color.BLUE);
+	    //casellatxtNumerorecord.setEditable(false);
+	    //casellatxtNumerorecord.setBackground(Color.red);
 	    //aggiungo tutti gli elementi al pannello
 	    pannello_Bottoni.add(btnFirst);
 	    pannello_Bottoni.add(btnPrev);
