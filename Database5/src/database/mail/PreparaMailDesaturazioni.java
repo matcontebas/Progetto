@@ -39,9 +39,9 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 */
 	private int errore;
 	private boolean esegui_o_simula; //simulazione true significa modalità normale false simulazione
-	private int contarecord=0;
-	private int puntatorerecordcorrente=0;
-	private int mailinviate=0;
+	private int contarecord=0; //totale dei record del recordset
+	private int puntatorerecordcorrente=0; //puntatore al record corrente
+	private int mailinviate=0;//contatore mail inviate
 	private Connection connessioneDB=null;
 	private Statement statement=null;
 	private ResultSet recordset=null;
@@ -142,7 +142,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				recordset = statement.executeQuery("SELECT * FROM Desaturazioni_Locale WHERE DataInvioMail is Null AND TD is Not Null AND [N# LP] is Not Null AND WR is Not Null AND [IP NW]is Not Null AND [Data programmata] is Not Null");
 				// Conteggio record
 				while (recordset.next()){
-					contarecord+=1;
+					++contarecord;
 				}//fine ciclo while
 				if (contarecord>0) {
 					//Se ci sono record (i>0) faccio apparire l'oggetto panel che contiene i bottoni per muoversi all'interno del recordset
@@ -205,6 +205,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				//JOptionPane.showMessageDialog(FinestraComando, "First eseguito");
 				//inserire ComponiMail
 				ComponiMail(isEsegui_o_simula(),rs);
+				//imposto il ountatore ad uno sul primo record
 				puntatorerecordcorrente=1;
 			} 
 		} catch (Exception e) {
@@ -218,8 +219,9 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			if (rs.previous()) {
 				//JOptionPane.showMessageDialog(FinestraComando, "Prev eseguito");
 				ComponiMail(isEsegui_o_simula(),rs);
+				//decremento il puntatore controllando che non siamo già al primo record.
 				if (puntatorerecordcorrente>1) {
-					puntatorerecordcorrente-=1;
+					--puntatorerecordcorrente;
 					JOptionPane.showMessageDialog(FinestraComando, "Numero record: "+puntatorerecordcorrente);
 				}
 			} else {
@@ -238,8 +240,9 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			if (rs.next()) {
 				//JOptionPane.showMessageDialog(FinestraComando, "Next eseguito");
 				ComponiMail(isEsegui_o_simula(),rs);
+				//incremento il puntatore controllando che non siamo già all'ultimo record
 				if (puntatorerecordcorrente<contarecord) {
-					puntatorerecordcorrente+=1;
+					++puntatorerecordcorrente;
 					JOptionPane.showMessageDialog(FinestraComando, "Numero record: "+ puntatorerecordcorrente);
 				}
 			} else {
@@ -258,6 +261,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			if (rs.last()) {
 				//JOptionPane.showMessageDialog(FinestraComando, "Last eseguito");
 				ComponiMail(isEsegui_o_simula(),rs);
+				//imposto il puntatore sull'ultimo record
 				puntatorerecordcorrente=contarecord;
 			} 
 		} catch (Exception e) {
