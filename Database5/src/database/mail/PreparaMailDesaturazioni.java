@@ -40,6 +40,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	private int errore;
 	private boolean esegui_o_simula; //simulazione true significa modalità normale false simulazione
 	private int contarecord=0;
+	private int puntatorerecordcorrente=0;
 	private int mailinviate=0;
 	private Connection connessioneDB=null;
 	private Statement statement=null;
@@ -178,7 +179,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	public void CollegaFileAccess() {
 		FileDialogWindows trovafileAccess=new FileDialogWindows("Access File","accdb","mdb");
 		if (trovafileAccess.getEsito()==1) {
-			btnEstraiDati.setVisible(true);
+			//btnEstraiDati.setVisible(true);
 			btnSimula.setVisible(true);
 			String PathDB=trovafileAccess.percorsofile();
 			//JOptionPane.showMessageDialog(FinestraComando, "File selezionato: \n" + PathDB);
@@ -204,6 +205,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				//JOptionPane.showMessageDialog(FinestraComando, "First eseguito");
 				//inserire ComponiMail
 				ComponiMail(isEsegui_o_simula(),rs);
+				puntatorerecordcorrente=1;
 			} 
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -215,7 +217,11 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		try {
 			if (rs.previous()) {
 				//JOptionPane.showMessageDialog(FinestraComando, "Prev eseguito");
-				ComponiMail(isEsegui_o_simula(),rs);			
+				ComponiMail(isEsegui_o_simula(),rs);
+				if (puntatorerecordcorrente>1) {
+					puntatorerecordcorrente-=1;
+					JOptionPane.showMessageDialog(FinestraComando, "Numero record: "+puntatorerecordcorrente);
+				}
 			} else {
 				//la seguente istruzione serve per riportare il cursore sul record corretto quando
 				//premo MovePrev troppe volte
@@ -232,6 +238,10 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			if (rs.next()) {
 				//JOptionPane.showMessageDialog(FinestraComando, "Next eseguito");
 				ComponiMail(isEsegui_o_simula(),rs);
+				if (puntatorerecordcorrente<contarecord) {
+					puntatorerecordcorrente+=1;
+					JOptionPane.showMessageDialog(FinestraComando, "Numero record: "+ puntatorerecordcorrente);
+				}
 			} else {
 				//la seguente istruzione serve per riportare il cursore sul record corretto quando
 				//premo MoveNext troppe volte
@@ -248,6 +258,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			if (rs.last()) {
 				//JOptionPane.showMessageDialog(FinestraComando, "Last eseguito");
 				ComponiMail(isEsegui_o_simula(),rs);
+				puntatorerecordcorrente=contarecord;
 			} 
 		} catch (Exception e) {
 			// TODO: handle exception
