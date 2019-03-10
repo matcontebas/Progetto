@@ -119,6 +119,13 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			setErrore(ERRORE_CONNESSIONE_DRIVER); //errore=1 significa  nella connessione con il driver
 		}
 	}
+	/**
+	 * Il metodo provvede a generare la stringa sql per il recupero dei dati dal database
+	 * e provvede al conteggio dei record memorizzandoli nella variabile contarecord.
+	 * Imposta tra l'altro anche la user ed il mittente della mail.
+	 * @param avvio_o_simulazione parametro in ingresso che definisce se è stato premuto
+	 * il bottone Estrai dati oppure simula.
+	 */
 	public void EstraiDatidaFile(boolean avvio_o_simulazione) {
 		//inizializzo i valori di default dei campi della finestra
 		usrtxt.setText(CostruisciDestinatariMail("UserMittente"));
@@ -179,6 +186,11 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			JOptionPane.showMessageDialog(FinestraComando, "Errore: "+getErrore()+" il pulsante non funziona la connessione al DB è chiusa");
 		}
 	} //Fine estrai dati
+	/**
+	 * Il metodo gestisce la connessione al database access.
+	 * Se la connessione va a buon fine rende visibili i due bottoni per estrarre i dati o
+	 * per fare la simulazione.
+	 */
 	public void CollegaFileAccess() {
 		FileDialogWindows trovafileAccess=new FileDialogWindows("Access File","accdb","mdb");
 		if (trovafileAccess.getEsito()==1) {
@@ -201,6 +213,11 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			JOptionPane.showMessageDialog(FinestraComando, "File NON selezionato");
 		}
 	}
+	/**
+	 * Il metodo provvede a far portare l'oggetto rs al primo record, costruisce la mail in base al contenuto di rs,
+	 * imposta il puntatore al record ad 1 e aggiorna la casella di testo casellatxtNumerorecord
+	 * @param rs prende come paramtro in ingresso l'oggetto rs di tipo ResultSet
+	 */
 	public void MoveFirst(ResultSet rs) {
 		//JOptionPane.showMessageDialog(FinestraComando, "First");
 		try {
@@ -217,6 +234,12 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			JOptionPane.showMessageDialog(FinestraComando, "Errore metodoMoveFirst");
 		}
 	}
+	/**
+	 * Il metodo provvede a spostare il record corrente di rs al record precedente, 
+	 * costruisce la mail in base al contenuto di rs,
+	 * imposta il puntatore al record e aggiorna la casella di testo casellatxtNumerorecord
+	 * @param rs prende come paramtro in ingresso l'oggetto rs di tipo ResultSet
+	 */
 	public void MovePrev(ResultSet rs) {
 		//JOptionPane.showMessageDialog(FinestraComando, "Prev");
 		try {
@@ -238,6 +261,12 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			JOptionPane.showMessageDialog(FinestraComando, "Errore metodoMovePrev");
 		}
 	}
+	/**
+	 * Il metodo provvede a spostare il record corrente di rs al record successivo, 
+	 * costruisce la mail in base al contenuto di rs,
+	 * imposta il puntatore al record e aggiorna la casella di testo casellatxtNumerorecord
+	 * @param rs prende come paramtro in ingresso l'oggetto rs di tipo ResultSet
+	 */
 	public void MoveNext(ResultSet rs) {
 		try {
 			if (rs.next()) {
@@ -259,6 +288,12 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			JOptionPane.showMessageDialog(FinestraComando, "Errore metodoMoveNext");
 		}
 	}
+	/**
+	 * Il metodo provvede a spostare il record corrente di rs all'ultimo record, 
+	 * costruisce la mail in base al contenuto di rs,
+	 * imposta il puntatore al record all'ultimo record e aggiorna la casella di testo casellatxtNumerorecord
+	 * @param rs prende come paramtro in ingresso l'oggetto rs di tipo ResultSet
+	 */
 	public void MoveLast(ResultSet rs) {
 		//JOptionPane.showMessageDialog(FinestraComando, "Last");
 		try {
@@ -274,6 +309,10 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			JOptionPane.showMessageDialog(FinestraComando, "Errore metodoMoveLast");
 		}
 	}
+	/**
+	 * Questo metodo viene chiamato dal costruttore per impostare la finestra con il pannello
+	 * con i bottoni per muoversi tra i record del recordset ed il bottone per inviare la mail
+	 */
 	private void initialize2() {
 	    //Pannello per inserire i 4 bottoni
 	    pannello_Bottoni = new JPanel();
