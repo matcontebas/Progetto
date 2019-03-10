@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -47,6 +48,13 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	private Statement statement=null;
 	private ResultSet recordset=null;
 	private JTextField casellatxtNumerorecord; //definisco la casella di testo che conterrà il numero del record
+	/*La HashMap registromaildainviare serve per capire se la mail è stata inviata o meno.
+	 * Per ogni record della query viene impostato il valore a true. La chiave è un intero, ovvero
+	 *il numero del record ed il valore può essere true o false a seconda se la mail è da inviare o meno.
+	 *Quando la mail viene inviata con successo, il valore relativo al numero di record corrente viene impostato
+	 *a false nel senso che la mail è stata inviata e non è più da inviare.
+	 */
+	private HashMap <Integer, Boolean> registromaildainviare=new HashMap <Integer, Boolean>();
 	final int TUTTO_OK=0;
 	final int ERRORE_CONNESSIONE_DRIVER=1;
 	final int ERRORE_CONNESSIONE_DATABASE=2;
@@ -152,6 +160,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				// Conteggio record
 				while (recordset.next()){
 					++contarecord;
+					//inizializzo la HashMap registromaildainviare con un valore true per ogni record presente
+					registromaildainviare.put(contarecord, true);
 				}//fine ciclo while
 				if (contarecord>0) {
 					posta = new InviaMailTim(mittentetxt.getText(),usrtxt.getText(),"");
@@ -353,6 +363,10 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	    JButton btnMail = new JButton("Mail");
 	    btnMail.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent arg0) {
+	    		/*controllo se la mail è già stata inviata controllando se nell'oggetto HashMap
+	    		 * il valore corrispondente alla key puntarecordcorrente è pari a "true".
+	    		 * in questo caso significa che la mail è da inviare*/
+	    		if(registromaildainviare.get(puntatorerecordcorrente)) {
 	    		boolean invioposta;
 				boolean controllodati;
 				//posta = new InviaMailTim(mittentetxt.getText(),usrtxt.getText(),"");		
@@ -372,19 +386,21 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				}
 				//Fine controllo stringhe vuote
 				if (controllodati) {
-					//contamaildainviare++;
-					//ComponiMail compone il testo della mail e lo memorizza nei campi testo della finestra
-					//ComponiMail(avvio_o_simulazione,recordset);
 					//Chiamo il metodo inviamail che provvede all'invio della mail e all'aggiornamento del campo data di invio del DB
 					invioposta=inviamail(recordset,posta);
 					//Se l'invio della mail e l'aggiornamento è andato bene, incremento il contatore mail inviate.
 					if (invioposta) {
 						mailinviate++;
+						//se la mail va a buon fine, inserisco nella HashMap registromaildainviare il valore false
+						registromaildainviare.put(puntatorerecordcorrente, false);
 					}
 
 				} else {
 					JOptionPane.showMessageDialog(FinestraComando, "Controllo dei dati negativo. Controllare nel DB e riprovare");
 				}
+	    	} else {
+	    		JOptionPane.showMessageDialog(FinestraComando, "Mail già inviata");
+	    	}
 	    	}
 	    });
 	    //costruisco la casella di testo che conterrà il numero del record
