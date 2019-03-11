@@ -204,7 +204,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	public void CollegaFileAccess() {
 		FileDialogWindows trovafileAccess=new FileDialogWindows("Access File","accdb","mdb");
 		if (trovafileAccess.getEsito()==1) {
-			//btnEstraiDati.setVisible(true);
+			btnEstraiDati.setVisible(true);
 			btnSimula.setVisible(true);
 			String PathDB=trovafileAccess.percorsofile();
 			//JOptionPane.showMessageDialog(FinestraComando, "File selezionato: \n" + PathDB);
