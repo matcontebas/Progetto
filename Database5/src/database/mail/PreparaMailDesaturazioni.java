@@ -644,7 +644,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 					+ rs.getString(CENTRALE)+" "+rs.getString(DSLAM)+ " TD "+ rs.getString(TD)+ " per "+
 					dataprogrammataconvertita+". \n" + "La richiesta è stata inserita nel portale LP con il numero "+
 					rs.getString(NLP)+".\n" + CostruisciTestoMail("WRSpecialisti") + " \n" + 
-					rs.getString(WR)+ ".\n"+ "Saluti \nMatteo Bassi");
+					rs.getString(WR)+ ".\n"+ "Saluti \n"+ CostruisciTestoMail("Firma"));
 			break;
 			default:
 				//il caso default comprende tutti i casi in cui AOL è valorizzata da ABM fino a TOO
@@ -659,7 +659,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 						+ rs.getString(CENTRALE)+" "+rs.getString(DSLAM)+ " TD "+ rs.getString(TD)+ " per "+
 						dataprogrammataconvertita+". \n" + "La richiesta è stata inserita nel portale LP con il numero "+
 						rs.getString(NLP)+".\n" + CostruisciTestoMail("WRTecnici") + " \n" + 
-						rs.getString(WR)+ ".\n"+ testofinale +"\nSaluti \nMatteo Bassi");	
+						rs.getString(WR)+ ".\n"+ testofinale +"\nSaluti \n" + CostruisciTestoMail("Firma"));	
 		}
 //-------------------------------Fine blocco costruzione testo mail------------------------------------------------						
 		} catch (Exception e) {
