@@ -76,8 +76,12 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	final int DATA_INVIO_MAIL=34; //colonna 34 del file desaturazioni
 	final String AGGIORNAMENTO_CAMPO_AZIONE="verifica esecuzione";
 	/**
-	 * Costruttore: inizializza usrtxt, mittentetxt, destinatariotxt, destinatarioCCtxt
-	 * e crea la connessione con il Driver di database.
+	 * Costruttore: inizializza la finestra con il pannello bottoni per gestire il movimento tra i record, crea la connessione con
+	 * il driver di database.
+	 * Inoltre aggiunge un event handler che gestise l'evento windowclosing: in fase di chiusura della finestra viene
+	 * inviato un messaggio con il numero di mail inviate e viene salvato il recordset nel file di database con il comando
+	 * commit() (prima del commit() nessun dato viene scritto nel database). l'event handler provvede inoltre a chiudere il recordset, lo statement
+	 * e la connessione.
 	 */
 	public PreparaMailDesaturazioni() {
 		//Costruttore
@@ -86,7 +90,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		FinestraComando.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				JOptionPane.showMessageDialog(FinestraComando, "Finestra chiusa");
+				//JOptionPane.showMessageDialog(FinestraComando, "Finestra chiusa");
 				JOptionPane.showMessageDialog(FinestraComando, "mail inviate: "+ mailinviate);
 				try {
 					if (connessioneDB != null) {
