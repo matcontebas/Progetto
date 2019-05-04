@@ -442,15 +442,15 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 	 */
 	private String CostruisciDestinatariMail (String tipologia) {
 		//-----------GESTIRE ERRORI IN CASO l'SQL non trovi match---------------
-		Statement statement=null;
+		Statement statement_Locale=null;
 		ResultSet recordset=null;
 		String risultato="";
 		//int i=0;
 		try {
 			if (connessioneDB!=null) {
 				//questo statement apre di default il recordset scrollabile solo in avanti ed in sola lettura
-				statement = connessioneDB.createStatement();
-				recordset = statement.executeQuery(
+				statement_Locale = connessioneDB.createStatement();
+				recordset = statement_Locale.executeQuery(
 						"SELECT * FROM Destinatari_Mail WHERE Destinatari_Mail.Destinatari = '" + tipologia + "'");
 				while (recordset.next()) {
 					//i+=1;
@@ -471,8 +471,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 				if (recordset!= null) {
 					recordset.close();
 				}
-				if (statement!=null) {
-					statement.close();
+				if (statement_Locale!=null) {
+					statement_Locale.close();
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -488,14 +488,14 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 
 	private String CostruisciTestoMail (String tipo) {
 		//-----------GESTIRE ERRORI IN CASO l'SQL non trovi match---------------
-		Statement statement=null;
+		Statement statement_Locale=null;
 		ResultSet recordset=null;
 		String risultato="";
 		//int i=0;
 		try {
 			//questo statement apre di default il recordset scrollabile solo in avanti ed in sola lettura
-			statement=connessioneDB.createStatement();
-			recordset = statement.executeQuery("SELECT * FROM Testi_Mail WHERE Testi_Mail.TipoTesto = '"+ tipo + "'");		
+			statement_Locale=connessioneDB.createStatement();
+			recordset = statement_Locale.executeQuery("SELECT * FROM Testi_Mail WHERE Testi_Mail.TipoTesto = '"+ tipo + "'");		
 			while (recordset.next()){
 				//i+=1;
 				if (recordset.isLast()) {
@@ -512,7 +512,7 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 		}finally {
 			try {
 				recordset.close();
-				statement.close();
+				statement_Locale.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
