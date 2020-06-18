@@ -614,6 +614,8 @@ public class PreparaMailDesaturazioni extends FinestraApplicativa {
 			case "LIG":
 				destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("LIG"));
 				break;
+			case "MU":
+				destinatarioCCtxt.setText(destinatarioCCtxt.getText() + ", " + CostruisciDestinatariMail("MU"));
 			case "LACP":
 				//inserire codice per LACP
 				//JOptionPane.showMessageDialog(FinestraComando, "LACP");
